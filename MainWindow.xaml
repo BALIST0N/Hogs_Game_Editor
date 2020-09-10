@@ -1,0 +1,82 @@
+﻿<Window x:Class="hogs_gameManager_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:hogs_gameManager_wpf"
+        mc:Ignorable="d"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="MainWindow" Height="550" Width="1000" Loaded="Window_Loaded" WindowStyle="ToolWindow" ResizeMode="NoResize">
+    <Grid Background="#FF202020" Margin="0,-5,0,0" Width="1000" Height="550">
+ 
+        <ComboBox x:Name="mapListComboBox" Width="230" Height="30" Background="#FF202020" Foreground="White" SelectionChanged="MapListComboBox_SelectionChanged"
+          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Background" Value="#FF202020"/>
+                    <Setter Property="BorderBrush" Value="#FF202020"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <ListView x:Name="MapObjectsListView" SelectionChanged="MapObjectsListView_SelectionChanged" Background="#FF202020" Foreground="White" SelectionMode="Single" Width="230" Height="440" Margin="5,45,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="#FF202020"/>
+                    <Setter Property="Foreground" Value="White"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Black" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="MidnightBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110"/>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="50"/>
+                    <GridViewColumn Header="Group" DisplayMemberBinding="{Binding Group}" Width="50"/>
+
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <!-- Set any properties you want to set -->
+                            <Setter Property="Background" Value="Black" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <xctk:PropertyGrid x:Name="MapObjectPropertiesControl"  AutoGenerateProperties="True" Margin="700,10,0,0" ShowSummary="False" ShowSortOptions="False" ShowDescriptionByTooltip="False" Background="#FF202020" Foreground="White" BorderBrush="DarkGray" Height="500" Width="280" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <xctk:PropertyGrid.PropertyContainerStyle>
+                <Style TargetType="{x:Type xctk:PropertyItem}">
+                    <Setter Property="Background" Value="#FF202020"/>
+                </Style>
+            </xctk:PropertyGrid.PropertyContainerStyle>
+
+            <xctk:PropertyGrid.EditorDefinitions>
+                <xctk:EditorTemplateDefinition TargetProperties="name">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <!-- put whatever control you would like here (including your own custom one) -->
+                            <TextBox Text="{Binding Value}" />
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+            </xctk:PropertyGrid.EditorDefinitions>
+
+        </xctk:PropertyGrid>
+        <Image x:Name="MapImageControl" Height="450" Width="450" Margin="-65,0,0,0"/>
+        <StackPanel x:Name="StackPanel1" Height="450" Width="450" Margin="-65,0,0,0"/>
+        <Button x:Name="button" Content="Add New item to map" HorizontalAlignment="Left" Margin="5,490,0,0" VerticalAlignment="Top" Width="230" Background="#FF202020" Foreground="White" Height="20"/>
+        
+
+    </Grid>
+</Window>
