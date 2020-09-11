@@ -85,30 +85,6 @@ namespace hogs_gameManager_wpf
             this.MapList = MapList.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             #endregion
 
-
-            /*
-            //string[] files = Directory.GetFiles("D:/Games/IGG-HogsofWar/Maps/", "*.POG");
-            foreach (string file in files)
-            {
-                Console.WriteLine("Reading " + file);
-                List<MapObject> mapElements = new List<MapObject>();
-
-                byte[] lol = File.ReadAllBytes(file);
-                int blocks = lol.Length / 94;
-
-                for (int i = 1; i < blocks; i++)
-                {
-                    int endblock = i * 94 + 2;
-                    int startblock = endblock - 94;
-
-                    if (endblock < lol.Length)
-                    {
-                        mapElements.Add( new MapObject( lol[startblock..endblock] ));
-                    }
-                }
-
-            }*/
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -120,7 +96,7 @@ namespace hogs_gameManager_wpf
         {
             if( this.mapListComboBox.SelectedIndex != -1 )
             {
-                /*
+                /* 
                 if(e.RemovedItems.Count > 0)
                 {
                     if ( Xceed.Wpf.Toolkit.MessageBox.Show("would You like to save your data on this map ?", "Attention", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes )
@@ -136,40 +112,38 @@ namespace hogs_gameManager_wpf
                 }
                 */
 
+                //clear to avoid Exceptions
                 this.MapObjectPropertiesControl.SelectedObject = null;
                 this.MapObjectsListView.Items.Clear();
                 CurrentMap = new List<MapObjectV3>();
                 this.StackPanel1.Children.Clear();
 
-                byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG");
-                int blocks = mapdata.Length / 94;
+                byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG"); //Read the File
+                int blocks = mapdata.Length / 94; //Count number of map objects
 
                 for (int i = 1; i < blocks; i++)
                 {
                     int endblock = i * 94 + 2;
-                    int startblock = endblock - 94;
+                    int startblock = endblock - 94; //a map object is 94 bytes, so every 94 bytes, cut and create a mapobject
 
-                    if (endblock < mapdata.Length)
+                    if (endblock < mapdata.Length)//if this is the end of file
                     {
                         //MapObject mo = new MapObject(mapdata[startblock..endblock]);
-
                         MapObjectV3 mo = new MapObjectV3(mapdata[startblock..endblock]);
                         CurrentMap.Add(mo);
 
-                        this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Group = Convert.ToString(mo.team) });
+                        this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Group = Convert.ToString(mo.team) });  //this is just adding a row on the listbox
                     }
                 }
-                this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png"));
+                this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png")); //loading the center map
                 //this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/temp.png"));
 
-
+                
                 //generate buttons with icons in the minimap
                 foreach (MapObjectV3 mo in CurrentMap)
                 {
-                    Button b = GenerateBasicButton(mo);
-
-                    string test = new String(mo.name).TrimEnd('\0');
-                    switch ( test)
+                    string test = new String(mo.name).TrimEnd('\0');    //remove "\0" chars
+                    switch(test)    //check the mapobject name and draw it differently accoring to his name
                     {
                         case "AC_ME":
                         case "CO_ME":
@@ -181,10 +155,14 @@ namespace hogs_gameManager_wpf
                         case "SB_ME":
                         case "SN_ME":
                         case "SP_ME":
-                            if(mo.appearance == 1){ b.Background = Brushes.Green; }
-                            else{ b.Background = Brushes.Red; }
-                            this.StackPanel1.Children.Add(b);
-                            
+                            if(mo.appearance == 1) 
+                            { 
+                                this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.Green) ); 
+                            }
+                            else
+                            { 
+                                this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.Red) );  
+                            }
                             break;
 
                         case "DRUM":
@@ -194,71 +172,56 @@ namespace hogs_gameManager_wpf
 
                         case "CRATE1":
                         case "CRATE4":
-                            b.Background = Brushes.DarkGoldenrod;
-                            this.StackPanel1.Children.Add(b);
+                            this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.DarkGoldenrod)); 
                             
                             break;
 
                         case "CRATE2":
-                            b.Background = Brushes.DeepPink;
-                            this.StackPanel1.Children.Add(b);
+                            this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.DeepPink));
                             
                             break;
                         
                         case "PROPOINT":
-                            b.Background = Brushes.Yellow;
-                            b.BorderBrush = Brushes.Gold;
-                            this.StackPanel1.Children.Add(b);
-                            
+                            this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.Yellow,Brushes.Gold));
                             break;
 
                         case "AM_TANK":
                         case "TANK":
                         case "CARRY	":
                         case "AMLAUNCH":
-                            b.Background = Brushes.Gray;
-                            b.BorderBrush = Brushes.Blue;
-                            this.StackPanel1.Children.Add(b);
-                            
+                            this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Blue));
                             break;
 
                         case "BIG_GUN":
-                            b.Background = Brushes.Black;
-                            b.BorderBrush = Brushes.DarkBlue;
-                            this.StackPanel1.Children.Add(b);
-                            
+                            this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.Black, Brushes.DarkBlue));
                             break;
 
                         case "PILLBOX":
-                            b.Background = Brushes.Beige;
-                            b.BorderBrush = Brushes.White;
-                            this.StackPanel1.Children.Add(b);
-                            
+                            this.StackPanel1.Children.Add(GenerateObjectMapButton(mo, Brushes.Wheat, Brushes.White));
                             break;
                     }
                 }
 
-
             }
         }
 
-        private void MapObjectsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MapObjectsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)    //click on a different map object
         {
             if(this.MapObjectsListView.SelectedIndex != -1)
             {
                 this.MapObjectPropertiesControl.SelectedObject = CurrentMap[this.MapObjectsListView.SelectedIndex];
-                this.MapObjectPropertiesControl.SelectedObjectName = new string( CurrentMap[this.MapObjectsListView.SelectedIndex].name); 
+                this.MapObjectPropertiesControl.SelectedObjectName = new string( CurrentMap[this.MapObjectsListView.SelectedIndex].name);  //"new string" cuz char[]
                 this.MapObjectPropertiesControl.SelectedObjectTypeName = "Object n°" + this.MapObjectsListView.SelectedIndex.ToString();
                 this.MapObjectPropertiesControl.Update();
                 this.MapObjectPropertiesControl.ExpandAllProperties();
             }
         }
 
-        private Button GenerateBasicButton(MapObjectV3 mo)
+        private Button GenerateObjectMapButton(MapObjectV3 mo)
         {
             //MessageBox.Show(CurrentMap.IndexOf(mo).ToString() + " '\n\r" + mo.position[0] + " " + mo.position[1] + " '\n\r" + Math.Round(mo.position[0] / 72.81, 2) + " " + Math.Round(mo.position[1] / 72.81, 2));
 
-            double x = Math.Round(mo.position[0] / 72.81, 2); //map size is 32768 px, the panel is 450, 32768/450 = 72.81 , map scale : )
+            double x = Math.Round(mo.position[0] / 72.81, 2) ; //map size is 32768 px, the panel is 450, 32768/450 = 72.81 , map scale : )
             double y = Math.Round(mo.position[1] / 72.81, 2);
 
             Button b = new Button();
@@ -269,6 +232,21 @@ namespace hogs_gameManager_wpf
             b.BorderBrush = Brushes.Black;
             b.Margin = new Thickness(y, x, 0, 0);
             b.Click += B_Click;
+
+            return b;
+        }
+        private Button GenerateObjectMapButton(MapObjectV3 mo,Brush backColor)
+        {
+            Button b = GenerateObjectMapButton(mo);
+            b.Background = backColor;
+
+            return b;
+        }
+        private Button GenerateObjectMapButton(MapObjectV3 mo, Brush backColor,Brush bordercolor)
+        {
+            Button b = GenerateObjectMapButton(mo);
+            b.Background = backColor;
+            b.BorderBrush = bordercolor;
 
             return b;
         }
@@ -285,7 +263,7 @@ namespace hogs_gameManager_wpf
             b.BorderThickness = new Thickness(1.5);
             b.BorderBrush = Brushes.Black;
             b.Margin = new Thickness(y, x, 0, 0);
-            b.Click += B_Click; ;
+            b.Click += B_Click;
             return b;
         }
 
