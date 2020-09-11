@@ -13,21 +13,21 @@ namespace hogs_gameManager_wpf
         public short[] position            	{get; set;}    // position in the world [3]
         public ushort  index               	{get; set;}    // todo
         public short[] angles              	{get; set;}    // angles in the world [3]
-        public ushort  type               	    {get; set;}    // todo
+        public ushort  type               	{get; set;}    // todo
         public short[] bounds              	{get; set;}    // collision bounds [3]
         public ushort  bounds_type         	{get; set;}    // box, prism, sphere and none
-        public short   energy					{get; set;}
-        public byte    appearance				{get; set;}
+        public short   energy			    {get; set;}
+        public byte    appearance			{get; set;}
         public byte    team                	{get; set;}    // uk, usa, german, french, japanese, soviet
-        public short   objective				{get; set;}
-        public byte    objective_actor_id		{get; set;}
+        public short   objective			{get; set;}
+        public byte    objective_actor_id	{get; set;}
         public byte[]  objective_extra     	{get; set;}   //[2]
-        public byte    unused1				    {get; set;}
+        public byte    unused1				{get; set;}
         public ushort[] unused2            	{get; set;}   //[8]
         public short[] fallback_position   	{get; set;}   //[3]
-        public short   extra					{get; set;}
-        public short   attached_actor_num		{get; set;}
-        public short   unused3				    {get; set;}
+        public short   extra			    {get; set;}
+        public short   attached_actor_num	{get; set;}
+        public short   unused3				{get; set;}
 
         public MapObjectV3(byte[] hexblock)
         {
@@ -36,12 +36,12 @@ namespace hogs_gameManager_wpf
             this.angles = new short[3];
             this.bounds = new short[3];
             this.objective_extra = new byte[2];
-            this.unused2 = new ushort[3];
+            this.unused2 = new ushort[8];
             this.fallback_position = new short[3];
             #endregion
 
-            this.name = Encoding.ASCII.GetChars( hexblock[0..15] );
-            this.unused0 = Encoding.ASCII.GetChars( hexblock[16..33] );
+            this.name = Encoding.ASCII.GetChars( hexblock[0..16] );
+            this.unused0 = Encoding.ASCII.GetChars( hexblock[17..33] );
 
             this.position[0] = BitConverter.ToInt16(hexblock, 34);
             this.position[1] = BitConverter.ToInt16(hexblock, 36);
@@ -53,7 +53,7 @@ namespace hogs_gameManager_wpf
             this.angles[1] = BitConverter.ToInt16(hexblock, 44);
             this.angles[2] = BitConverter.ToInt16(hexblock, 46);
 
-            this.type   = BitConverter.ToUInt16(hexblock, 48);
+            this.type = BitConverter.ToUInt16(hexblock, 48);
 
             this.bounds[0] = BitConverter.ToInt16(hexblock, 50);
             this.bounds[1] = BitConverter.ToInt16(hexblock, 52);
@@ -71,7 +71,7 @@ namespace hogs_gameManager_wpf
 
             this.unused1 = hexblock[65];
 
-            for(int i = 0;i==7; i++)    //hexblock[66..81]
+            for(int i = 0;i<=7; i++)    //hexblock[66..81]
             {
                 int hexindex = 66 + (i*2);
                 this.unused2[i] = BitConverter.ToUInt16(hexblock, hexindex);

@@ -159,11 +159,12 @@ namespace hogs_gameManager_wpf
                         this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Group = Convert.ToString(mo.team) });
                     }
                 }
-                this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png")); ;
-                
-                
-                //generate buttons with icons
-                foreach(MapObjectV3 mo in CurrentMap)
+                this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png"));
+                //this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/temp.png"));
+
+
+                //generate buttons with icons in the minimap
+                foreach (MapObjectV3 mo in CurrentMap)
                 {
                     Button b = GenerateBasicButton(mo);
 
@@ -183,6 +184,7 @@ namespace hogs_gameManager_wpf
                             if(mo.appearance == 1){ b.Background = Brushes.Green; }
                             else{ b.Background = Brushes.Red; }
                             this.StackPanel1.Children.Add(b);
+                            
                             break;
 
                         case "DRUM":
@@ -194,32 +196,49 @@ namespace hogs_gameManager_wpf
                         case "CRATE4":
                             b.Background = Brushes.DarkGoldenrod;
                             this.StackPanel1.Children.Add(b);
+                            
                             break;
 
                         case "CRATE2":
                             b.Background = Brushes.DeepPink;
                             this.StackPanel1.Children.Add(b);
+                            
                             break;
                         
                         case "PROPOINT":
                             b.Background = Brushes.Yellow;
                             b.BorderBrush = Brushes.Gold;
                             this.StackPanel1.Children.Add(b);
+                            
                             break;
 
                         case "AM_TANK":
                         case "TANK":
                         case "CARRY	":
                         case "AMLAUNCH":
+                            b.Background = Brushes.Gray;
+                            b.BorderBrush = Brushes.Blue;
+                            this.StackPanel1.Children.Add(b);
+                            
                             break;
 
                         case "BIG_GUN":
+                            b.Background = Brushes.Black;
+                            b.BorderBrush = Brushes.DarkBlue;
+                            this.StackPanel1.Children.Add(b);
+                            
                             break;
 
                         case "PILLBOX":
+                            b.Background = Brushes.Beige;
+                            b.BorderBrush = Brushes.White;
+                            this.StackPanel1.Children.Add(b);
+                            
                             break;
                     }
                 }
+
+
             }
         }
 
@@ -237,8 +256,10 @@ namespace hogs_gameManager_wpf
 
         private Button GenerateBasicButton(MapObjectV3 mo)
         {
-            double x = mo.position[0] / 146;
-            double y = mo.position[1] / 73;
+            //MessageBox.Show(CurrentMap.IndexOf(mo).ToString() + " '\n\r" + mo.position[0] + " " + mo.position[1] + " '\n\r" + Math.Round(mo.position[0] / 72.81, 2) + " " + Math.Round(mo.position[1] / 72.81, 2));
+
+            double x = Math.Round(mo.position[0] / 72.81, 2); //map size is 32768 px, the panel is 450, 32768/450 = 72.81 , map scale : )
+            double y = Math.Round(mo.position[1] / 72.81, 2);
 
             Button b = new Button();
             b.Name = "n" + CurrentMap.IndexOf(mo).ToString();
@@ -247,14 +268,15 @@ namespace hogs_gameManager_wpf
             b.BorderThickness = new Thickness(1.5);
             b.BorderBrush = Brushes.Black;
             b.Margin = new Thickness(y, x, 0, 0);
-            b.Click += B_Click; ;
+            b.Click += B_Click;
+
             return b;
         }
 
         private Button GenerateBasicButton(MapObject mo)
         {
-            double x = mo.XOffset / 146;
-            double y = mo.YOffset / 73;
+            double x = mo.XOffset / 291.2;
+            double y = mo.YOffset / 145.6;
 
             Button b = new Button();
             //b.Name = "n" + CurrentMap.IndexOf(mo).ToString();
@@ -272,6 +294,8 @@ namespace hogs_gameManager_wpf
             Button b = (Button)sender;
             this.MapObjectsListView.SelectedIndex = Convert.ToInt32(b.Name.Replace("n", String.Empty));
             this.MapObjectsListView.ScrollIntoView(this.MapObjectsListView.Items[this.MapObjectsListView.SelectedIndex]);
+
+            //int TERRAIN_PIXEL_WIDTH = TERRAIN_TILE_PIXEL_WIDTH * TERRAIN_ROW_TILES; //512 * 256 = 131072 ?.?.??.
         }
     }
 
