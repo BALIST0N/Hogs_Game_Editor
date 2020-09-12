@@ -44,7 +44,7 @@ namespace hogs_gameManager_wpf
             this.name = Encoding.ASCII.GetChars( hexblock[0..16] );
             this.unused0 = Encoding.ASCII.GetChars( hexblock[17..33] );
 
-            //MessageBox.Show(" | " + Convert.ToInt16(hexblock[34] + hexblock[35]) + " | "+BitConverter.ToInt16( hexblock,34 ) + " | " + Convert.ToInt16(Convert.ToInt16(hexblock[34]) + Convert.ToInt16(hexblock[35])) );
+            //MessageBox.Show(" | " + Convert.ToInt16(hexblock[34] + hexblock[35]) + " | "+ BitConverter.ToInt16( hexblock,34 ) + " | " + Convert.ToInt32(hexblock[34] +hexblock[35]) );
 
             this.position[0] = Convert.ToInt16(hexblock[34] + hexblock[35]);
             this.position[1] = Convert.ToInt16(hexblock[36] +  hexblock[37]);

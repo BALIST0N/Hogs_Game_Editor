@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -121,14 +120,14 @@ namespace hogs_gameManager_wpf
                 this.CanvasImageMap.Children.Clear();
 
                 byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG"); //Read the File
-                int blocks = mapdata.Length / 94; //Count number of map objects
+                ushort blocks = BitConverter.ToUInt16(mapdata, 0); //get number of map objects
 
-                for (int i = 1; i < blocks; i++)
+                for (int i = 1; i <= blocks; i++)
                 {
                     int endblock = i * 94 + 2;
                     int startblock = endblock - 94; //a map object is 94 bytes, so every 94 bytes, cut and create a mapobject
 
-                    if (endblock < mapdata.Length)//if this is the end of file
+                    if (endblock < mapdata.Length)  //if this is not the end of file
                     {
                         //MapObject mo = new MapObject(mapdata[startblock..endblock]);
                         MapObjectV3 mo = new MapObjectV3(mapdata[startblock..endblock]);
@@ -140,7 +139,6 @@ namespace hogs_gameManager_wpf
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png")); //loading the center map
                 //this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/temp.png"));
 
-                
                 //generate buttons with icons in the minimap
                 foreach (MapObjectV3 mo in CurrentMap)
                 {
@@ -157,14 +155,8 @@ namespace hogs_gameManager_wpf
                         case "SB_ME":
                         case "SN_ME":
                         case "SP_ME":
-                            if(mo.appearance == 1) 
-                            { 
-                                this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Lime) ); 
-                            }
-                            else
-                            { 
-                                this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Crimson) );  
-                            }
+                            if(mo.appearance == 1) { GenerateObjectMapButton(mo, Brushes.Lime); }
+                            else { GenerateObjectMapButton(mo, Brushes.Crimson); }
                             break;
 
                         case "DRUM":
@@ -174,42 +166,42 @@ namespace hogs_gameManager_wpf
 
                         case "CRATE1":
                         case "CRATE4":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.DarkGoldenrod)); 
+                            GenerateObjectMapButton(mo, Brushes.DarkGoldenrod); 
                             
                             break;
 
                         case "CRATE2":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.DeepPink));
+                            GenerateObjectMapButton(mo, Brushes.DeepPink);
                             
                             break;
                         
                         case "PROPOINT":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Yellow,Brushes.Gold));
+                            GenerateObjectMapButton(mo, Brushes.Yellow,Brushes.Gold);
                             break;
 
                         case "AM_TANK":
                         case "TANK":
                         case "CARRY	":
                         case "AMLAUNCH":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Blue));
+                            GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Blue);
                             break;
 
                         case "BIG_GUN":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Black, Brushes.DarkBlue));
+                            GenerateObjectMapButton(mo, Brushes.Black, Brushes.DarkBlue);
                             break;
 
                         case "PILLBOX":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Wheat, Brushes.White));
+                            GenerateObjectMapButton(mo, Brushes.Wheat, Brushes.White);
                             break;
 
                         case "M_TENT1":
                         case "M_TENT2":
                         case "TENT_S":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Green,Brushes.Pink));
+                            GenerateObjectMapButton(mo, Brushes.Green,Brushes.Pink);
                             break;
 
                         case "SHELTER":
-                            this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Orange));
+                            GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Orange);
                             break;
 
                         default:
@@ -233,14 +225,11 @@ namespace hogs_gameManager_wpf
             }
         }
 
-        private System.Windows.Shapes.Rectangle GenerateObjectMapButton(MapObjectV3 mo)
+        private Rectangle GenerateObjectMapButton(MapObjectV3 mo)
         {
             //MessageBox.Show(CurrentMap.IndexOf(mo).ToString() + " '\n\r" + mo.position[0] + " " + mo.position[1] + " '\n\r" + Math.Round(mo.position[0] / 72.81, 2) + " " + Math.Round(mo.position[1] / 72.81, 2));
 
-            double x = -mo.position[0] / 2; //map size is 32768 px, the panel is 450, 32768/450 = 72.81 , map scale : )
-            double y = mo.position[1] / 2;
-
-            System.Windows.Shapes.Rectangle b = new System.Windows.Shapes.Rectangle
+            Rectangle b = new Rectangle
             {
                 Name = "n" + CurrentMap.IndexOf(mo).ToString(),
                 Width = 9,
@@ -250,46 +239,56 @@ namespace hogs_gameManager_wpf
                 VerticalAlignment = VerticalAlignment.Center,
             };
             b.MouseDown += B_Click;
-            Canvas.SetLeft(b, x+225);
-            Canvas.SetTop(b, y+225);
-
             return b;
         }
-        private System.Windows.Shapes.Rectangle GenerateObjectMapButton(MapObjectV3 mo,Brush backColor)
+        private void GenerateObjectMapButton(MapObjectV3 mo,Brush backColor)
         {
-            System.Windows.Shapes.Rectangle b = GenerateObjectMapButton(mo);
+            Rectangle b = GenerateObjectMapButton(mo);
             b.Fill = backColor;
+            SpawnObjectMapRectangle(b, mo);
 
-            return b;
         }
-        private System.Windows.Shapes.Rectangle GenerateObjectMapButton(MapObjectV3 mo, Brush backColor,Brush bordercolor)
+        private void GenerateObjectMapButton(MapObjectV3 mo, Brush backColor,Brush bordercolor)
         {
-            System.Windows.Shapes.Rectangle b = GenerateObjectMapButton(mo);
+            Rectangle b = GenerateObjectMapButton(mo);
             b.Fill = backColor;
             b.Stroke = bordercolor;
-
-            return b;
+            SpawnObjectMapRectangle(b, mo);
         }
 
-        private Button GenerateBasicButton(MapObject mo)
+        private void SpawnObjectMapRectangle(Rectangle R, MapObjectV3 mo)
+        {
+            double x = mo.position[0]; //map size is 32768 px, the panel is 450, 32768/450 = 72.81 , map scale : )
+            double y = mo.position[1];
+
+            this.CanvasImageMap.Children.Add(R);
+            Canvas.SetLeft(R, x);
+            Canvas.SetTop(R, y);
+
+        }
+
+        private Button GenerateBasicButton(MapObject mo) //already deprecated function
         {
             double x = mo.XOffset / 291.2;
             double y = mo.YOffset / 145.6;
 
-            Button b = new Button();
-            //b.Name = "n" + CurrentMap.IndexOf(mo).ToString();
-            b.Width = 9;
-            b.Height = 9;
-            b.BorderThickness = new Thickness(1.5);
-            b.BorderBrush = Brushes.Black;
-            b.Margin = new Thickness(y, x, 0, 0);
+            Button b = new Button
+            {
+                //Name = "n" + CurrentMap.IndexOf(mo).ToString(),
+                Width = 9,
+                Height = 9,
+                BorderThickness = new Thickness(1.5),
+                BorderBrush = Brushes.Black,
+                Margin = new Thickness(y, x, 0, 0)
+            };
             b.Click += B_Click;
             return b;
         }
 
+
         private void B_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Shapes.Rectangle b = (System.Windows.Shapes.Rectangle)sender;
+           Rectangle b = (Rectangle)sender;
             this.MapObjectsListView.SelectedIndex = Convert.ToInt32( b.Name.Replace("n", String.Empty) );
             this.MapObjectsListView.ScrollIntoView(this.MapObjectsListView.Items[this.MapObjectsListView.SelectedIndex]);
 
