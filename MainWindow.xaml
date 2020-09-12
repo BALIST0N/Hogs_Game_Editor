@@ -74,7 +74,7 @@
 
         </xctk:PropertyGrid>
         <Image x:Name="MapImageControl" Height="450" Width="450" Margin="-65,0,0,0"/>
-        <StackPanel x:Name="StackPanel1" Height="450" Width="450" Margin="-65,0,0,0"/>
+        <Canvas x:Name="CanvasImageMap" Height="450" Width="450" Margin="-65,0,0,0"/>
         <Button x:Name="button" Content="Add New item to map" HorizontalAlignment="Left" Margin="5,490,0,0" VerticalAlignment="Top" Width="230" Background="#FF202020" Foreground="White" Height="20"/>
         
 
