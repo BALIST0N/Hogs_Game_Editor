@@ -124,7 +124,7 @@ namespace hogs_gameManager_wpf
 
                 for (int i = 1; i <= blocks; i++)
                 {
-                    int endblock = i * 94 + 2;
+                    int endblock = i * 94 + 2;  
                     int startblock = endblock - 94; //a map object is 94 bytes, so every 94 bytes, cut and create a mapobject
 
                     if (endblock < mapdata.Length)  //if this is not the end of file
@@ -155,7 +155,7 @@ namespace hogs_gameManager_wpf
                         case "SB_ME":
                         case "SN_ME":
                         case "SP_ME":
-                            if(mo.appearance == 1) { GenerateObjectMapButton(mo, Brushes.Lime); }
+                            if(mo.extra != 0) { GenerateObjectMapButton(mo, Brushes.Lime); }
                             else { GenerateObjectMapButton(mo, Brushes.Crimson); }
                             break;
 
@@ -258,12 +258,12 @@ namespace hogs_gameManager_wpf
 
         private void SpawnObjectMapRectangle(Rectangle R, MapObjectV3 mo)
         {
-            double x = mo.position[0]; //map size is 32768 px, the panel is 450, 32768/450 = 72.81 , map scale : )
-            double y = mo.position[1];
+            double x = mo.position[0]/64;
+            double y = -mo.position[2]/64;
 
             this.CanvasImageMap.Children.Add(R);
-            Canvas.SetLeft(R, x);
-            Canvas.SetTop(R, y);
+            Canvas.SetLeft(R, x+256);
+            Canvas.SetTop(R, y+256);
 
         }
 

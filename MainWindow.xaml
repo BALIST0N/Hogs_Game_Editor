@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:hogs_gameManager_wpf"
         mc:Ignorable="d"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="550" Width="1000" Loaded="Window_Loaded" WindowStyle="ToolWindow" ResizeMode="NoResize">
-    <Grid Background="#FF202020" Margin="0,-5,0,0" Width="1000" Height="550">
+        Title="MainWindow" Height="552" Width="1052" Loaded="Window_Loaded" WindowStyle="ToolWindow" ResizeMode="NoResize">
+    <Grid Background="#FF202020" Margin="0,0,0,0" Width="1052" Height="552">
  
         <ComboBox x:Name="mapListComboBox" Width="230" Height="30" Background="#FF202020" Foreground="White" SelectionChanged="MapListComboBox_SelectionChanged"
-          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top">
+          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" HorizontalAlignment="Left" Margin="2,0,0,0" VerticalAlignment="Top">
             <ComboBox.ItemContainerStyle>
                 <Style TargetType="ComboBoxItem">
                     <Setter Property="Background" Value="#FF202020"/>
@@ -20,7 +20,7 @@
             </ComboBox.ItemContainerStyle>
         </ComboBox>
 
-        <ListView x:Name="MapObjectsListView" SelectionChanged="MapObjectsListView_SelectionChanged" Background="#FF202020" Foreground="White" SelectionMode="Single" Width="230" Height="440" Margin="5,45,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+        <ListView x:Name="MapObjectsListView" SelectionChanged="MapObjectsListView_SelectionChanged" Background="#FF202020" Foreground="White" SelectionMode="Single" Width="230" Height="440" Margin="2,35,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Background" Value="#FF202020"/>
@@ -54,7 +54,7 @@
             </ListView.View>
         </ListView>
 
-        <xctk:PropertyGrid x:Name="MapObjectPropertiesControl"  AutoGenerateProperties="True" Margin="700,10,0,0" ShowSummary="False" ShowSortOptions="False" ShowDescriptionByTooltip="False" Background="#FF202020" Foreground="White" BorderBrush="DarkGray" Height="500" Width="280" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <xctk:PropertyGrid x:Name="MapObjectPropertiesControl"  AutoGenerateProperties="True" Margin="760,0,0,0" ShowSummary="False" ShowSortOptions="False" ShowDescriptionByTooltip="False" Background="#FF202020" Foreground="White" BorderBrush="DarkGray" Height="510" Width="275" VerticalAlignment="Top" HorizontalAlignment="Left">
             <xctk:PropertyGrid.PropertyContainerStyle>
                 <Style TargetType="{x:Type xctk:PropertyItem}">
                     <Setter Property="Background" Value="#FF202020"/>
@@ -73,9 +73,9 @@
             </xctk:PropertyGrid.EditorDefinitions>
 
         </xctk:PropertyGrid>
-        <Image x:Name="MapImageControl" Height="450" Width="450" Margin="-65,0,0,0"/>
-        <Canvas x:Name="CanvasImageMap" Height="450" Width="450" Margin="-65,0,0,0"/>
-        <Button x:Name="button" Content="Add New item to map" HorizontalAlignment="Left" Margin="5,490,0,0" VerticalAlignment="Top" Width="230" Background="#FF202020" Foreground="White" Height="20"/>
+        <Image x:Name="MapImageControl" Height="512" Width="512" Margin="-60,-40,0,0"/>
+        <Canvas x:Name="CanvasImageMap" Height="512" Width="512" Margin="-60,-40,0,0"/>
+        <Button x:Name="button" Content="Add New item to map" HorizontalAlignment="Left" Margin="2,482,0,0" VerticalAlignment="Top" Width="230" Background="#FF202020" Foreground="White" Height="20"/>
         
 
     </Grid>
