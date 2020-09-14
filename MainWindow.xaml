@@ -54,7 +54,7 @@
         </ListView>
 
         <xctk:PropertyGrid x:Name="MapObjectPropertiesControl"  AutoGenerateProperties="False" Margin="760,0,0,0" ShowSummary="False" ShowSortOptions="False" ShowDescriptionByTooltip="False" Background="#FF202020" Foreground="White" BorderBrush="DarkGray" Height="510" Width="275" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <!--  properties, categories order  -->
+            <!--  properties, categories,display names  -->
             <xctk:PropertyGrid.PropertyDefinitions>
 
                 <xctk:PropertyDefinition TargetProperties="name" DisplayName="Name" Category="General" DisplayOrder="1"/>
@@ -82,8 +82,7 @@
                 <xctk:PropertyDefinition TargetProperties="unused1" Category="unused" DisplayOrder="18"/>
                 <xctk:PropertyDefinition TargetProperties="unused2" Category="unused" DisplayOrder="19"/>
                 <xctk:PropertyDefinition TargetProperties="unused3" Category="unused" DisplayOrder="20"/>
-                
-                
+
             </xctk:PropertyGrid.PropertyDefinitions>
  
             <!-- changing type of edit method for some props -->
@@ -92,19 +91,59 @@
                 <xctk:EditorTemplateDefinition TargetProperties="name,unused0">
                     <xctk:EditorTemplateDefinition.EditingTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Value}" Background="Black" Foreground="White"/>
+                            <TextBox Text="{Binding Value}" Background="#FF202020" Foreground="White"/>
                         </DataTemplate>
                     </xctk:EditorTemplateDefinition.EditingTemplate>
                 </xctk:EditorTemplateDefinition>
 
-                <xctk:EditorTemplateDefinition TargetProperties="position,bounds,angles,objective_extra,fallback_position">
+                <xctk:EditorTemplateDefinition TargetProperties="position,bounds,angles,fallback_position">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate >
+                            <TextBlock Text="X,Z,Y" />
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+                
+                <xctk:EditorTemplateDefinition TargetProperties="objective_extra">
                     <xctk:EditorTemplateDefinition.EditingTemplate>
                         <DataTemplate>
-                            <!-- nothing ?-->
                             <TextBlock Text=""/>
                         </DataTemplate>
                     </xctk:EditorTemplateDefinition.EditingTemplate>
                 </xctk:EditorTemplateDefinition>
+                
+                <xctk:EditorTemplateDefinition TargetProperties="index">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Value}" Background="#FF202020" Foreground="White" TextAlignment="Right"/>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+
+                <xctk:EditorTemplateDefinition TargetProperties="type,bounds_type,objective">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <xctk:UShortUpDown Background="#FF202020" Foreground="White" Value="{Binding Value}"/>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+
+                <xctk:EditorTemplateDefinition TargetProperties="position,angles,energy,extra,attached_actor_num">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <xctk:ShortUpDown Background="#FF202020" Foreground="White" Value="{Binding Value}"/>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+
+                <xctk:EditorTemplateDefinition TargetProperties="appearance,team,objective_actor_id">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <xctk:ByteUpDown Background="#FF202020" Foreground="White" Value="{Binding Value}"/>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+
             </xctk:PropertyGrid.EditorDefinitions>
 
             <!-- css for the propertygrid -->
@@ -113,16 +152,6 @@
                     <Setter Property="Background" Value="#FF202020"/>
                     <Setter Property="Foreground" Value="White"/>
                 </Style>
-                <!-- <Style TargetType="{x:Type xctk:TextBlockEditor}">
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="Black" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="MidnightBlue"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style> -->
             </xctk:PropertyGrid.PropertyContainerStyle>
 
         </xctk:PropertyGrid>

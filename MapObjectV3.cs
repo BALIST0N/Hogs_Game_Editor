@@ -24,7 +24,7 @@ namespace hogs_gameManager_wpf
         public short   energy			    {get; set;}
         public byte    appearance			{get; set;}
         public byte    team                	{get; set;}    // uk, usa, german, french, japanese, soviet
-        public ushort   objective			{get; set;}
+        public ushort  objective			{get; set;}
         public byte    objective_actor_id	{get; set;}
         public byte[]  objective_extra     	{get; set;}   //[2]
         public byte    unused1				{get; set;}
