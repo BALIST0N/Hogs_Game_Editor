@@ -25,7 +25,6 @@
                 <Style TargetType="ListViewItem">
                     <Setter Property="Background" Value="#FF202020"/>
                     <Setter Property="Foreground" Value="White"/>
-
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="Black" />
@@ -38,9 +37,9 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110"/>
-                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="50"/>
-                    <GridViewColumn Header="Group" DisplayMemberBinding="{Binding Group}" Width="50"/>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="35"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="125"/>
+                    <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Team}" Width="50"/>
 
                     <GridView.ColumnHeaderContainerStyle>
                         <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -54,23 +53,77 @@
             </ListView.View>
         </ListView>
 
-        <xctk:PropertyGrid x:Name="MapObjectPropertiesControl"  AutoGenerateProperties="True" Margin="760,0,0,0" ShowSummary="False" ShowSortOptions="False" ShowDescriptionByTooltip="False" Background="#FF202020" Foreground="White" BorderBrush="DarkGray" Height="510" Width="275" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <xctk:PropertyGrid.PropertyContainerStyle>
-                <Style TargetType="{x:Type xctk:PropertyItem}">
-                    <Setter Property="Background" Value="#FF202020"/>
-                </Style>
-            </xctk:PropertyGrid.PropertyContainerStyle>
+        <xctk:PropertyGrid x:Name="MapObjectPropertiesControl"  AutoGenerateProperties="False" Margin="760,0,0,0" ShowSummary="False" ShowSortOptions="False" ShowDescriptionByTooltip="False" Background="#FF202020" Foreground="White" BorderBrush="DarkGray" Height="510" Width="275" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <!--  properties, categories order  -->
+            <xctk:PropertyGrid.PropertyDefinitions>
 
+                <xctk:PropertyDefinition TargetProperties="name" DisplayName="Name" Category="General" DisplayOrder="1"/>
+                <xctk:PropertyDefinition TargetProperties="index" DisplayName="ID" Category="General" DisplayOrder="2"/>
+                <xctk:PropertyDefinition TargetProperties="type" DisplayName="Type" Category="General" DisplayOrder="3"/>
+                <xctk:PropertyDefinition TargetProperties="energy" DisplayName="Energy" Category="General" DisplayOrder="4"/>
+                <xctk:PropertyDefinition TargetProperties="appearance" DisplayName="Appearance" Category="General" DisplayOrder="5"/>
+                <xctk:PropertyDefinition TargetProperties="team" DisplayName="Team" Category="General" DisplayOrder="6"/>
+
+                <xctk:PropertyDefinition TargetProperties="position" DisplayName="Position" Category="General" DisplayOrder="8" IsExpandable="true"/>
+
+                <xctk:PropertyDefinition TargetProperties="angles" DisplayName="Rotation" Category="General" DisplayOrder="9" IsExpandable="true"/>
+
+                <xctk:PropertyDefinition TargetProperties="bounds" DisplayName="Collision" Category="General" DisplayOrder="10" IsExpandable="true"/>
+                <xctk:PropertyDefinition TargetProperties="bounds_type" DisplayName="Collision type" Category="General" DisplayOrder="11"/>
+
+                <xctk:PropertyDefinition TargetProperties="objective" DisplayName="Objective" Category="Script" DisplayOrder="12"/>
+                <xctk:PropertyDefinition TargetProperties="objective_actor_id" DisplayName="Actor id" Category="Script" DisplayOrder="13"/>
+                <xctk:PropertyDefinition TargetProperties="objective_extra" DisplayName="Objective params" Category="Script" DisplayOrder="14" IsExpandable="true"/>
+                <xctk:PropertyDefinition TargetProperties="fallback_position" DisplayName="Fallback position" Category="Script" DisplayOrder="15" IsExpandable="true"/>
+                <xctk:PropertyDefinition TargetProperties="attached_actor_num" DisplayName="attached actor num" Category="Script" DisplayOrder="16"/>
+                <xctk:PropertyDefinition TargetProperties="extra" DisplayName="Extra" Category="Script" DisplayOrder="7"/>
+                
+                <xctk:PropertyDefinition TargetProperties="unused0" Category="unused" DisplayOrder="17"/>
+                <xctk:PropertyDefinition TargetProperties="unused1" Category="unused" DisplayOrder="18"/>
+                <xctk:PropertyDefinition TargetProperties="unused2" Category="unused" DisplayOrder="19"/>
+                <xctk:PropertyDefinition TargetProperties="unused3" Category="unused" DisplayOrder="20"/>
+                
+                
+            </xctk:PropertyGrid.PropertyDefinitions>
+ 
+            <!-- changing type of edit method for some props -->
             <xctk:PropertyGrid.EditorDefinitions>
-                <xctk:EditorTemplateDefinition TargetProperties="name">
+
+                <xctk:EditorTemplateDefinition TargetProperties="name,unused0">
                     <xctk:EditorTemplateDefinition.EditingTemplate>
                         <DataTemplate>
-                            <!-- put whatever control you would like here (including your own custom one) -->
-                            <TextBox Text="{Binding Value}" />
+                            <TextBox Text="{Binding Value}" Background="Black" Foreground="White"/>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+
+                <xctk:EditorTemplateDefinition TargetProperties="position,bounds,angles,objective_extra,fallback_position">
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <!-- nothing ?-->
+                            <TextBlock Text=""/>
                         </DataTemplate>
                     </xctk:EditorTemplateDefinition.EditingTemplate>
                 </xctk:EditorTemplateDefinition>
             </xctk:PropertyGrid.EditorDefinitions>
+
+            <!-- css for the propertygrid -->
+            <xctk:PropertyGrid.PropertyContainerStyle>
+                <Style TargetType="{x:Type xctk:PropertyItem}">
+                    <Setter Property="Background" Value="#FF202020"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+                <!-- <Style TargetType="{x:Type xctk:TextBlockEditor}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Black" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="MidnightBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style> -->
+            </xctk:PropertyGrid.PropertyContainerStyle>
 
         </xctk:PropertyGrid>
         <Image x:Name="MapImageControl" Height="512" Width="512" Margin="-60,-40,0,0"/>

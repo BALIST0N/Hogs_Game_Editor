@@ -119,25 +119,29 @@ namespace hogs_gameManager_wpf
                 CurrentMap = new List<MapObjectV3>();
                 this.CanvasImageMap.Children.Clear();
 
-                byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG"); //Read the File
-                ushort blocks = BitConverter.ToUInt16(mapdata, 0); //get number of map objects
-
-                for (int i = 1; i <= blocks; i++)
+                //byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG"); //Read the File
+                using (FileStream fs = File.Open("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    int endblock = i * 94 + 2;  
-                    int startblock = endblock - 94; //a map object is 94 bytes, so every 94 bytes, cut and create a mapobject
+                    byte[] mapdata = new byte[fs.Length];
+                    fs.Read( mapdata, 0, Convert.ToInt32(fs.Length) );
+                    ushort blocks = BitConverter.ToUInt16(mapdata, 0); //get number of map objects
 
-                    if (endblock < mapdata.Length)  //if this is not the end of file
+                    for (int i = 1; i <= blocks; i++)
                     {
-                        //MapObject mo = new MapObject(mapdata[startblock..endblock]);
-                        MapObjectV3 mo = new MapObjectV3(mapdata[startblock..endblock]);
-                        CurrentMap.Add(mo);
+                        int endblock = i * 94 + 2;  
+                        int startblock = endblock - 94; //a map object is 94 bytes, so every 94 bytes, cut and create a mapobject
 
-                        this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Group = Convert.ToString(mo.team) });  //this is just adding a row on the listbox
+                        if (endblock < mapdata.Length)  //if this is not the end of file
+                        {
+                            //MapObject mo = new MapObject(mapdata[startblock..endblock]);
+                            MapObjectV3 mo = new MapObjectV3(mapdata[startblock..endblock]);
+                            CurrentMap.Add(mo);
+
+                            this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Team = Convert.ToString(mo.team) });  //this is just adding a row on the listbox
+                        }
                     }
                 }
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png")); //loading the center map
-                //this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/temp.png"));
 
                 //generate buttons with icons in the minimap
                 foreach (MapObjectV3 mo in CurrentMap)
@@ -155,13 +159,15 @@ namespace hogs_gameManager_wpf
                         case "SB_ME":
                         case "SN_ME":
                         case "SP_ME":
-                            if(mo.extra != 0) { GenerateObjectMapButton(mo, Brushes.Lime); }
+                            if(mo.team == 1) { GenerateObjectMapButton(mo, Brushes.Lime); }
                             else { GenerateObjectMapButton(mo, Brushes.Crimson); }
                             break;
 
                         case "DRUM":
+                            GenerateObjectMapButton(mo, Brushes.DarkOrange,Brushes.Crimson);
                             break;
                         case "DRUM2":
+                            GenerateObjectMapButton(mo, Brushes.GreenYellow, Brushes.LawnGreen);
                             break;
 
                         case "CRATE1":
@@ -171,7 +177,7 @@ namespace hogs_gameManager_wpf
                             break;
 
                         case "CRATE2":
-                            GenerateObjectMapButton(mo, Brushes.DeepPink);
+                            GenerateObjectMapButton(mo, Brushes.DeepPink,Brushes.Indigo);
                             
                             break;
                         
@@ -180,6 +186,7 @@ namespace hogs_gameManager_wpf
                             break;
 
                         case "AM_TANK":
+                        case "CARRY":
                         case "TANK":
                         case "CARRY	":
                         case "AMLAUNCH":
@@ -205,7 +212,7 @@ namespace hogs_gameManager_wpf
                             break;
 
                         default:
-                            //this.CanvasImageMap.Children.Add(GenerateObjectMapButton(mo, Brushes.White));
+                            //GenerateObjectMapButton(mo, Brushes.White);
                             break;
                     }
                 }
@@ -262,8 +269,8 @@ namespace hogs_gameManager_wpf
             double y = -mo.position[2]/64;
 
             this.CanvasImageMap.Children.Add(R);
-            Canvas.SetLeft(R, x+256);
-            Canvas.SetTop(R, y+256);
+            Canvas.SetLeft(R, x+251);
+            Canvas.SetTop(R, y+251);
 
         }
 
@@ -300,6 +307,6 @@ namespace hogs_gameManager_wpf
     {
         public string Name { get; set; }
         public string Id { get; set; }
-        public string Group { get; set; }
+        public string Team { get; set; }
     }
 }

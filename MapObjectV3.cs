@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace hogs_gameManager_wpf
 {
+    [CategoryOrder("General", 1)]
+    [CategoryOrder("Script", 2)]
+    [CategoryOrder("unused", 3)]
     class MapObjectV3
     {
         //source of reference : https://github.com/TalonBraveInfo/OpenHoW/blob/master/src/engine/Map.cpp#L114
 
         public char[]  name                	{get; set;}    // class name [16]
         public char[]  unused0             	{get; set;}    //[16]
-        public short[] position            	{get; set;}    // position in the world [3]
+        public short[] position            	{get; set;}    // position in the world (0 = x, 1 = z, 2 = y) [3]
         public ushort  index               	{get; set;}    // todo
         public short[] angles              	{get; set;}    // angles in the world [3]
         public ushort  type               	{get; set;}    // todo
@@ -20,7 +24,7 @@ namespace hogs_gameManager_wpf
         public short   energy			    {get; set;}
         public byte    appearance			{get; set;}
         public byte    team                	{get; set;}    // uk, usa, german, french, japanese, soviet
-        public short   objective			{get; set;}
+        public ushort   objective			{get; set;}
         public byte    objective_actor_id	{get; set;}
         public byte[]  objective_extra     	{get; set;}   //[2]
         public byte    unused1				{get; set;}
@@ -65,16 +69,16 @@ namespace hogs_gameManager_wpf
             this.appearance = hexblock[58];
             this.team = hexblock[59];
 
-            this.objective = BitConverter.ToInt16(hexblock, 60);
-            this.objective_actor_id = hexblock[61];
-            this.objective_extra[0] = hexblock[62];
-            this.objective_extra[1] = hexblock[63];
+            this.objective = BitConverter.ToUInt16(hexblock, 60);
+            this.objective_actor_id = hexblock[62];
+            this.objective_extra[0] = hexblock[63];
+            this.objective_extra[1] = hexblock[64];
 
-            this.unused1 = hexblock[64];
+            this.unused1 = hexblock[65];
 
-            for (int i = 0; i <= 7; i++)    //hexblock[67..81]
+            for (int i = 0; i <= 7; i++)    //hexblock[65..81]
             {
-                int hexindex = 67 + (i * 2);
+                int hexindex = 66 + (i * 2);
                 this.unused2[i] = BitConverter.ToUInt16(hexblock, hexindex);
             }
 
