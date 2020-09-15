@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:hogs_gameManager_wpf"
         mc:Ignorable="d"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="552" Width="1052" Loaded="Window_Loaded" WindowStyle="ToolWindow" ResizeMode="NoResize">
+        Title="Hogs Game Editor" Height="552" Width="1052" Loaded="Window_Loaded" WindowStyle="ToolWindow" ResizeMode="NoResize">
     <Grid Background="#FF202020" Margin="0,0,0,0" Width="1052" Height="552">
  
         <ComboBox x:Name="mapListComboBox" Width="230" Height="30" Background="#FF202020" Foreground="White" SelectionChanged="MapListComboBox_SelectionChanged"
@@ -157,7 +157,7 @@
         </xctk:PropertyGrid>
         <Image x:Name="MapImageControl" Height="512" Width="512" Margin="-60,-40,0,0"/>
         <Canvas x:Name="CanvasImageMap" Height="512" Width="512" Margin="-60,-40,0,0"/>
-        <Button x:Name="button" Content="Add New item to map" HorizontalAlignment="Left" Margin="2,482,0,0" VerticalAlignment="Top" Width="230" Background="#FF202020" Foreground="White" Height="20"/>
+        <Button x:Name="button" Content="Add New item to map" HorizontalAlignment="Left" Margin="2,482,0,0" VerticalAlignment="Top" Width="230" Background="#FF202020" Foreground="White" Height="20" Click="AddNewObjectButton_Click"/>
         
 
     </Grid>

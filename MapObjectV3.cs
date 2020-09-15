@@ -91,6 +91,11 @@ namespace hogs_gameManager_wpf
             this.unused3 = BitConverter.ToInt16(hexblock, 92);
         }
 
+        public MapObjectV3()
+        {
+
+        }
+
         public byte[] ConvertToByteArray()
         {
             List<byte> hexList = new List<byte>();

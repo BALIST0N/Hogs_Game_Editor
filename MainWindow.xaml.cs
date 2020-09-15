@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using hogs_gameEditor_wpf;
 
 namespace hogs_gameManager_wpf
 {
@@ -115,7 +116,7 @@ namespace hogs_gameManager_wpf
                 CurrentMap = new List<MapObjectV3>();
                 this.mapObjectEdited = false;
 
-                //byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG"); //Read the File
+                //Read the File
                 using (FileStream fs = File.Open("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     byte[] mapdata = new byte[fs.Length];
@@ -185,7 +186,6 @@ namespace hogs_gameManager_wpf
                         case "AM_TANK":
                         case "CARRY":
                         case "TANK":
-                        case "CARRY	":
                         case "AMLAUNCH":
                             GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Blue);
                             break;
@@ -271,23 +271,6 @@ namespace hogs_gameManager_wpf
 
         }
 
-        private Button GenerateBasicButton(MapObject mo) //already deprecated function
-        {
-            double x = mo.XOffset / 291.2;
-            double y = mo.YOffset / 145.6;
-
-            Button b = new Button
-            {
-                //Name = "n" + CurrentMap.IndexOf(mo).ToString(),
-                Width = 9,
-                Height = 9,
-                BorderThickness = new Thickness(1.5),
-                BorderBrush = Brushes.Black,
-                Margin = new Thickness(y, x, 0, 0)
-            };
-            b.Click += B_Click;
-            return b;
-        }
 
         private void SaveFile()
         {
@@ -296,31 +279,42 @@ namespace hogs_gameManager_wpf
             foreach (MapObjectV3 mo in CurrentMap) { mapdataList.AddRange(mo.ConvertToByteArray()); }
             byte[] mapdataToSave = mapdataList.ToArray();
 
-            //and then filestream etcc rewrite file gneu gneu "CurrentMapName".POG
+            //and then filestream etcc rewrite file "CurrentMapName".POG
         }
 
-        private void SaveFile(List<MapObjectV3> map)//in case  of ...? 
+        private void SaveFile(List<MapObjectV3> map)//in case of ...?
         {
             List<byte> mapdataList = new List<byte>();
             mapdataList.AddRange(BitConverter.GetBytes(Convert.ToUInt16(CurrentMap.Count)));
             foreach (MapObjectV3 mo in map) { mapdataList.AddRange(mo.ConvertToByteArray()); }
             byte[] mapdataToSave = mapdataList.ToArray();
 
+            using ( FileStream fs = File.OpenWrite("D:/Games/IGG-HogsofWar/Maps/" + CurrentMapName + "_edited.POG") )
+            {
+                fs.Write(mapdataToSave, 0, mapdataToSave.Length );
+            }
         }
-
 
         private void B_Click(object sender, RoutedEventArgs e)
         {
-           Rectangle b = (Rectangle)sender;
+            Rectangle b = (Rectangle)sender;
             this.MapObjectsListView.SelectedIndex = Convert.ToInt32( b.Name.Replace("n", String.Empty) );
             this.MapObjectsListView.ScrollIntoView(this.MapObjectsListView.Items[this.MapObjectsListView.SelectedIndex]);
-
-            //int TERRAIN_PIXEL_WIDTH = TERRAIN_TILE_PIXEL_WIDTH * TERRAIN_ROW_TILES; //512 * 256 = 131072 ?.?.??.
         }
 
         private void MapObjectPropertiesControl_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
         {
             this.mapObjectEdited = true;
+        }
+
+        private void AddNewObjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.mapListComboBox.SelectedIndex != -1)
+            {
+                AddObjectWindow a = new AddObjectWindow(CurrentMapName, CurrentMap.Count);
+                a.Show();
+            }
+            
         }
     }
 

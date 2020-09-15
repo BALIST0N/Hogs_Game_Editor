@@ -1,0 +1,36 @@
+﻿<Window x:Class="hogs_gameEditor_wpf.AddObjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:hogs_gameEditor_wpf"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Add New Object To the  Map" Height="430" Width="600" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    <Grid Background="AntiqueWhite" Height="430" Width="600">
+        <Label x:Name="label_Copy0" Content="Position" Margin="246,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label x:Name="label_Copy1" Content="Name" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label x:Name="label_Copy2" Content="Index" Margin="10,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label x:Name="label_Copy3" Content="Rotation" Margin="260,293,0,0" Width="60" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label x:Name="label_00000" Content="Type" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Height="28" Width="43"/>
+        <Label x:Name="label_Copy6" Content="Energy" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Height="28" Width="54"/>
+        <Label x:Name="label_Copy7" Content="Appearance" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Height="28" Width="75"/>
+        <Label x:Name="label_Copy8" Content="Team" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Height="28" Width="43"/>
+        <Label x:Name="label_Copy9" Content="Extra" HorizontalAlignment="Left" Margin="10,206,0,0" VerticalAlignment="Top" Height="28" Width="43"/>
+        <Label x:Name="label_Copy4" Content="Attached Actor N#" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top" Height="28" Width="110"/>
+
+        <ComboBox x:Name="nameComboBox" Margin="69,12,0,0" Height="25" Width="140" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="IndexTextBox" HorizontalAlignment="Left" Margin="69,50,0,0" Text="{Binding index}" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <xctk:UShortUpDown x:Name="typeUShortUpDown" Margin="69,80,0,0"  Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <xctk:ShortUpDown x:Name="energyShortUpDown" Margin="69,115,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left" Value="255" />
+        <xctk:ByteUpDown x:Name="apperByteUpDown" Margin="90,145,0,0" Height="20" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <xctk:ByteUpDown x:Name="teamByteUpDown" Margin="69,178,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <xctk:ShortUpDown x:Name="extraShortUpDown" Margin="69,210,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <xctk:ShortUpDown x:Name="att_actorNumShortUpDown" Margin="120,240,0,0" Height="20" Width="69" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+        <Image x:Name="mapImage" Margin="0,10,10,0" Height="256" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Canvas x:Name="mapCanvas" Margin="0,10,10,0" Height="256" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Slider x:Name="rotationSlider" Height="20" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,297,10,0" AutoToolTipPlacement="TopLeft" Maximum="360" SmallChange="1" />
+        <Button x:Name="saveButton" Content="S A V E" HorizontalAlignment="Left" Margin="10,323,0,0" VerticalAlignment="Top" Width="200" Height="50" Click="saveButton_Click"/>
+    </Grid>
+</Window>
