@@ -19,6 +19,8 @@ namespace hogs_gameManager_wpf
     {
         public Dictionary<string, string> MapList;
         List<MapObjectV3> CurrentMap;
+        string CurrentMapName;
+        bool mapObjectEdited = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -97,27 +99,21 @@ namespace hogs_gameManager_wpf
         {
             if( this.mapListComboBox.SelectedIndex != -1 )
             {
-                /* 
-                if(e.RemovedItems.Count > 0)
+                if(e.RemovedItems.Count > 0 && mapObjectEdited)
                 {
                     if ( Xceed.Wpf.Toolkit.MessageBox.Show("would You like to save your data on this map ?", "Attention", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes )
                     {
-                        //Save into the file                        
-                        public void SaveMap(List<MapObject> map)
-                        {
-                            foreach( MapObject mo in CurrentMap)
-                            {
-                            }
-                        }
+                        SaveFile();
                     }
                 }
-                */
+                
 
                 //clear to avoid Exceptions
                 this.MapObjectPropertiesControl.SelectedObject = null;
                 this.MapObjectsListView.Items.Clear();
-                CurrentMap = new List<MapObjectV3>();
                 this.CanvasImageMap.Children.Clear();
+                CurrentMap = new List<MapObjectV3>();
+                this.mapObjectEdited = false;
 
                 //byte[] mapdata = File.ReadAllBytes("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG"); //Read the File
                 using (FileStream fs = File.Open("D:/Games/IGG-HogsofWar/Maps/" + MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".POG", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -141,7 +137,8 @@ namespace hogs_gameManager_wpf
                         }
                     }
                 }
-                this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ MapList.ElementAt(mapListComboBox.SelectedIndex).Value + ".png")); //loading the center map
+                this.CurrentMapName = MapList.ElementAt(mapListComboBox.SelectedIndex).Value;
+                this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
                 //generate buttons with icons in the minimap
                 foreach (MapObjectV3 mo in CurrentMap)
@@ -292,6 +289,25 @@ namespace hogs_gameManager_wpf
             return b;
         }
 
+        private void SaveFile()
+        {
+            List<byte> mapdataList = new List<byte>();
+            mapdataList.AddRange(BitConverter.GetBytes(Convert.ToUInt16(CurrentMap.Count)));
+            foreach (MapObjectV3 mo in CurrentMap) { mapdataList.AddRange(mo.ConvertToByteArray()); }
+            byte[] mapdataToSave = mapdataList.ToArray();
+
+            //and then filestream etcc rewrite file gneu gneu "CurrentMapName".POG
+        }
+
+        private void SaveFile(List<MapObjectV3> map)//in case  of ...? 
+        {
+            List<byte> mapdataList = new List<byte>();
+            mapdataList.AddRange(BitConverter.GetBytes(Convert.ToUInt16(CurrentMap.Count)));
+            foreach (MapObjectV3 mo in map) { mapdataList.AddRange(mo.ConvertToByteArray()); }
+            byte[] mapdataToSave = mapdataList.ToArray();
+
+        }
+
 
         private void B_Click(object sender, RoutedEventArgs e)
         {
@@ -300,6 +316,11 @@ namespace hogs_gameManager_wpf
             this.MapObjectsListView.ScrollIntoView(this.MapObjectsListView.Items[this.MapObjectsListView.SelectedIndex]);
 
             //int TERRAIN_PIXEL_WIDTH = TERRAIN_TILE_PIXEL_WIDTH * TERRAIN_ROW_TILES; //512 * 256 = 131072 ?.?.??.
+        }
+
+        private void MapObjectPropertiesControl_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
+        {
+            this.mapObjectEdited = true;
         }
     }
 

@@ -91,5 +91,59 @@ namespace hogs_gameManager_wpf
             this.unused3 = BitConverter.ToInt16(hexblock, 92);
         }
 
+        public byte[] ConvertToByteArray()
+        {
+            List<byte> hexList = new List<byte>();
+            byte[] hexblock = new byte[94];
+
+            hexList.AddRange( Encoding.ASCII.GetBytes(this.name) );
+            hexList.AddRange(Encoding.ASCII.GetBytes(this.unused0) );
+
+            hexList.AddRange(BitConverter.GetBytes(this.position[0]));
+            hexList.AddRange(BitConverter.GetBytes(this.position[1]));
+            hexList.AddRange(BitConverter.GetBytes(this.position[2]));
+
+            hexList.AddRange( BitConverter.GetBytes(this.index) );
+
+            hexList.AddRange(BitConverter.GetBytes(this.angles[0]));
+            hexList.AddRange(BitConverter.GetBytes(this.angles[1]));
+            hexList.AddRange(BitConverter.GetBytes(this.angles[2]));
+
+            hexList.AddRange(BitConverter.GetBytes(this.type));
+
+
+            hexList.AddRange(BitConverter.GetBytes(this.bounds[0]));
+            hexList.AddRange(BitConverter.GetBytes(this.bounds[1]));
+            hexList.AddRange(BitConverter.GetBytes(this.bounds[2]));
+
+            hexList.AddRange(BitConverter.GetBytes(this.bounds_type));
+            hexList.AddRange(BitConverter.GetBytes(this.energy));
+            hexList.Add( this.appearance );
+            hexList.Add( this.team );
+
+            hexList.AddRange(BitConverter.GetBytes(this.objective));
+
+            hexList.Add(this.objective_actor_id);
+            hexList.Add(this.objective_extra[0]);
+            hexList.Add(this.objective_extra[1]);
+            hexList.Add(this.unused1);
+
+            for (int i = 0; i <= 7; i++)    //hexblock[65..81]
+            {
+                hexList.AddRange( BitConverter.GetBytes(this.unused2[i]) );
+            }
+
+            hexList.AddRange(BitConverter.GetBytes(this.fallback_position[0]));
+            hexList.AddRange(BitConverter.GetBytes(this.fallback_position[1]));
+            hexList.AddRange(BitConverter.GetBytes(this.fallback_position[2]));
+
+            hexList.AddRange(BitConverter.GetBytes(this.extra));
+            hexList.AddRange(BitConverter.GetBytes(this.attached_actor_num));
+            hexList.AddRange(BitConverter.GetBytes(this.unused3));
+
+            hexblock = hexList.ToArray(); //do it like this for testing if it crash
+            return hexblock;
+        }
+
     }
 }
