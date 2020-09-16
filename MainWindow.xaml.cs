@@ -18,10 +18,10 @@ namespace hogs_gameManager_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Dictionary<string, string> MapList;
-        List<MapObjectV3> CurrentMap;
+        Dictionary<string, string> MapList;
+        public List<MapObjectV3> CurrentMap;
         string CurrentMapName;
-        bool mapObjectEdited = false;
+        public bool mapObjectEdited = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -94,6 +94,7 @@ namespace hogs_gameManager_wpf
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.mapListComboBox.ItemsSource = MapList.Keys;
+            this.MapObjectsListView.KeyUp += MapObjectsListView_KeyUp;
         }
 
         private void MapListComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -141,77 +142,7 @@ namespace hogs_gameManager_wpf
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
                 //generate buttons with icons in the minimap
-                foreach (MapObjectV3 mo in CurrentMap)
-                {
-                    string test = new String(mo.name).TrimEnd('\0');    //remove "\0" chars
-                    switch(test)    //check the mapobject name and draw it differently accoring to his name
-                    {
-                        case "AC_ME":
-                        case "CO_ME":
-                        case "GR_ME":
-                        case "HV_ME":
-                        case "LE_ME":
-                        case "ME_ME":
-                        case "SA_ME":
-                        case "SB_ME":
-                        case "SN_ME":
-                        case "SP_ME":
-                            if(mo.team == 1) { GenerateObjectMapButton(mo, Brushes.Lime); }
-                            else { GenerateObjectMapButton(mo, Brushes.Crimson); }
-                            break;
-
-                        case "DRUM":
-                            GenerateObjectMapButton(mo, Brushes.DarkOrange,Brushes.Crimson);
-                            break;
-                        case "DRUM2":
-                            GenerateObjectMapButton(mo, Brushes.GreenYellow, Brushes.LawnGreen);
-                            break;
-
-                        case "CRATE1":
-                        case "CRATE4":
-                            GenerateObjectMapButton(mo, Brushes.DarkGoldenrod); 
-                            
-                            break;
-
-                        case "CRATE2":
-                            GenerateObjectMapButton(mo, Brushes.DeepPink,Brushes.Indigo);
-                            
-                            break;
-                        
-                        case "PROPOINT":
-                            GenerateObjectMapButton(mo, Brushes.Yellow,Brushes.Gold);
-                            break;
-
-                        case "AM_TANK":
-                        case "CARRY":
-                        case "TANK":
-                        case "AMLAUNCH":
-                            GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Blue);
-                            break;
-
-                        case "BIG_GUN":
-                            GenerateObjectMapButton(mo, Brushes.Black, Brushes.DarkBlue);
-                            break;
-
-                        case "PILLBOX":
-                            GenerateObjectMapButton(mo, Brushes.Wheat, Brushes.White);
-                            break;
-
-                        case "M_TENT1":
-                        case "M_TENT2":
-                        case "TENT_S":
-                            GenerateObjectMapButton(mo, Brushes.Green,Brushes.Pink);
-                            break;
-
-                        case "SHELTER":
-                            GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Orange);
-                            break;
-
-                        default:
-                            //GenerateObjectMapButton(mo, Brushes.White);
-                            break;
-                    }
-                }
+                LoadMapObjects();
 
             }
         }
@@ -225,6 +156,96 @@ namespace hogs_gameManager_wpf
                 this.MapObjectPropertiesControl.SelectedObjectTypeName = "Object n°" + this.MapObjectsListView.SelectedIndex.ToString();
                 this.MapObjectPropertiesControl.Update();
                 this.MapObjectPropertiesControl.ExpandAllProperties();
+            }
+        }
+
+        private void MapObjectsListView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete && MapObjectsListView.SelectedIndex != -1)
+            {
+                MapObjectsListViewItem molv =  (MapObjectsListViewItem)MapObjectsListView.SelectedItem;
+                MessageBoxResult res = MessageBox.Show("are you sure you want to delete Object n°" + molv.Id + " (" + molv.Name + ") ","A T T E N T I O N ",MessageBoxButton.YesNo);
+                if(res == MessageBoxResult.Yes)
+                {
+                    //delete in CurrentMap and in the list
+                    //bool mapEdited = true
+                }
+            }
+        }
+
+        public void LoadMapObjects()
+        {
+            //generate buttons with icons in the minimap
+            foreach (MapObjectV3 mo in CurrentMap)
+            {
+                string test = new String(mo.name).TrimEnd('\0');    //remove "\0" chars
+                switch (test)    //check the mapobject name and draw it differently accoring to his name
+                {
+                    case "AC_ME":
+                    case "CO_ME":
+                    case "GR_ME":
+                    case "HV_ME":
+                    case "LE_ME":
+                    case "ME_ME":
+                    case "SA_ME":
+                    case "SB_ME":
+                    case "SN_ME":
+                    case "SP_ME":
+                        if (mo.team == 1) { GenerateObjectMapButton(mo, Brushes.Lime); }
+                        else { GenerateObjectMapButton(mo, Brushes.Crimson); }
+                        break;
+
+                    case "DRUM":
+                        GenerateObjectMapButton(mo, Brushes.DarkOrange, Brushes.Crimson);
+                        break;
+                    case "DRUM2":
+                        GenerateObjectMapButton(mo, Brushes.GreenYellow, Brushes.LawnGreen);
+                        break;
+
+                    case "CRATE1":
+                    case "CRATE4":
+                        GenerateObjectMapButton(mo, Brushes.DarkGoldenrod);
+
+                        break;
+
+                    case "CRATE2":
+                        GenerateObjectMapButton(mo, Brushes.DeepPink, Brushes.Indigo);
+
+                        break;
+
+                    case "PROPOINT":
+                        GenerateObjectMapButton(mo, Brushes.Yellow, Brushes.Gold);
+                        break;
+
+                    case "AM_TANK":
+                    case "CARRY":
+                    case "TANK":
+                    case "AMLAUNCH":
+                        GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Blue);
+                        break;
+
+                    case "BIG_GUN":
+                        GenerateObjectMapButton(mo, Brushes.Black, Brushes.DarkBlue);
+                        break;
+
+                    case "PILLBOX":
+                        GenerateObjectMapButton(mo, Brushes.Wheat, Brushes.White);
+                        break;
+
+                    case "M_TENT1":
+                    case "M_TENT2":
+                    case "TENT_S":
+                        GenerateObjectMapButton(mo, Brushes.Green, Brushes.Pink);
+                        break;
+
+                    case "SHELTER":
+                        GenerateObjectMapButton(mo, Brushes.Gray, Brushes.Orange);
+                        break;
+
+                    default:
+                        //GenerateObjectMapButton(mo, Brushes.White);
+                        break;
+                }
             }
         }
 

@@ -185,7 +185,7 @@ namespace hogs_gameEditor_wpf
                 if( x <= 240 && 8 <= x) { Canvas.SetLeft(eli, x); }
                 if( y <= 240 && 8 <= y) { Canvas.SetTop(eli, y); }
 
-                this.label_Copy0.Content = x*128 + " | " + y*128;
+                this.label_Copy0.Content = (x*128 - 16384) + " | " + -(y*128 - 16384);
             }
             
         }
@@ -234,32 +234,39 @@ namespace hogs_gameEditor_wpf
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement fe = (FrameworkElement)this.mapCanvas.Children[0];
-            double top1 = Canvas.GetTop(fe) * 128;
-            double left1 = Canvas.GetLeft(fe) * 128;
+            double top1 = (Canvas.GetTop(fe)+7) * 128 - 16384;
+            double left1 = (Canvas.GetLeft(fe)+7) * 128 - 16384;
 
-            MapObjectV3 mo = new MapObjectV3
-            {
-                name = GetSelectedName(),
-                unused0 = "NULL    ".ToCharArray(),
-                position = new short[] { Convert.ToInt16(top1), 10, Convert.ToInt16(left1) },
-                index = Convert.ToUInt16(index),
-                angles = new short[] { 0, Convert.ToInt16(this.rotationSlider.Value), 0 },
-                type = (ushort)this.typeUShortUpDown.Value,
-                bounds = new short[] { 5, 5, 5 },
-                bounds_type = 1,
-                energy = (short)this.energyShortUpDown.Value,
-                appearance = GetAppearance(),
-                team = (byte)this.teamComboBox.SelectedItem,
-                objective = 0,
-                objective_actor_id = 0,
-                objective_extra = GetObjectiveParams(),
-                unused1 = 0,
-                unused2 = new ushort[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                fallback_position = new short[] { 0, 0, 0 },
-                extra = (short)this.extraShortUpDown.Value,
-                attached_actor_num = (short)this.att_actorNumShortUpDown.Value,
-                unused3 = 0
-            }; 
+            MapObjectV3 mo = new MapObjectV3();
+            mo.name = GetSelectedName();
+            mo.unused0 = "NULL    ".ToCharArray();
+            mo.position = new short[] { Convert.ToInt16(left1), 10, Convert.ToInt16(-top1) };
+            mo.index = Convert.ToUInt16(index);
+            mo.angles = new short[] { 0, Convert.ToInt16(this.rotationSlider.Value), 0 };
+            mo.type = (ushort)this.typeUShortUpDown.Value;
+            mo.bounds = new short[] { 5, 5, 5 };
+            mo.bounds_type = 1;
+            mo.energy = (short)this.energyShortUpDown.Value;
+            mo.appearance = GetAppearance();
+            mo.team =  Convert.ToByte( this.teamComboBox.SelectedItem);
+            mo.objective = 0;
+            mo.objective_actor_id = 0;
+            mo.objective_extra = GetObjectiveParams();
+            mo.unused1 = 0;
+            mo.unused2 = new ushort[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            mo.fallback_position = new short[] { 0, 0, 0 };
+            mo.extra = (short)this.extraShortUpDown.Value;
+            mo.attached_actor_num = (short)this.att_actorNumShortUpDown.Value;
+            mo.unused3 = 0;
+
+            MainWindow main = (MainWindow)Application.Current.MainWindow;
+
+            main.CurrentMap.Add(mo);
+            main.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Team = Convert.ToString(mo.team) });  //this is just adding a row on the listbox
+            main.LoadMapObjects();
+            main.mapObjectEdited = true;
+            this.Close();
+
         }
 
         private char[] GetSelectedName()

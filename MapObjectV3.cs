@@ -9,7 +9,7 @@ namespace hogs_gameManager_wpf
     [CategoryOrder("General", 1)]
     [CategoryOrder("Script", 2)]
     [CategoryOrder("unused", 3)]
-    class MapObjectV3
+    public class MapObjectV3
     {
         //source of reference : https://github.com/TalonBraveInfo/OpenHoW/blob/master/src/engine/Map.cpp#L114
 
