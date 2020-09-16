@@ -16,13 +16,13 @@ namespace hogs_gameManager_wpf
         public char[]  name                	{get; set;}    // class name [16]
         public char[]  unused0             	{get; set;}    //[16]
         public short[] position            	{get; set;}    // position in the world (0 = x, 1 = z, 2 = y) [3]
-        public ushort  index               	{get; set;}    // todo
+        public ushort  index               	{get; set;}    // Id of the object on the map 
         public short[] angles              	{get; set;}    // angles in the world [3]
-        public ushort  type               	{get; set;}    // todo
+        public ushort  type               	{get; set;}    // todo | looks like its the skin/model number or the rank for a pig
         public short[] bounds              	{get; set;}    // collision bounds [3]
         public ushort  bounds_type         	{get; set;}    // box, prism, sphere and none
-        public short   energy			    {get; set;}
-        public byte    appearance			{get; set;}
+        public short   energy			    {get; set;}    //sometimes its the number of turn before the item drop... if its 255 it means its default health
+        public byte    appearance			{get; set;}    //??? appear it with a parachute at start of the map ???
         public byte    team                	{get; set;}    // uk, usa, german, french, japanese, soviet
         public ushort  objective			{get; set;}
         public byte    objective_actor_id	{get; set;}

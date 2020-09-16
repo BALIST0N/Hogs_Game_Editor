@@ -10,27 +10,32 @@
     <Grid Background="AntiqueWhite" Height="430" Width="600">
         <Label x:Name="label_Copy0" Content="Position" Margin="246,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <Label x:Name="label_Copy1" Content="Name" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Label x:Name="label_Copy2" Content="Index" Margin="10,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <Label x:Name="label_Copy3" Content="Rotation" Margin="260,293,0,0" Width="60" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Label x:Name="label_00000" Content="Type" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Height="28" Width="43"/>
+        <Label x:Name="label_00000" Content="Type/Rank" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Height="28" Width="67"/>
         <Label x:Name="label_Copy6" Content="Energy" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Height="28" Width="54"/>
         <Label x:Name="label_Copy7" Content="Appearance" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Height="28" Width="75"/>
         <Label x:Name="label_Copy8" Content="Team" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Height="28" Width="43"/>
         <Label x:Name="label_Copy9" Content="Extra" HorizontalAlignment="Left" Margin="10,206,0,0" VerticalAlignment="Top" Height="28" Width="43"/>
         <Label x:Name="label_Copy4" Content="Attached Actor N#" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top" Height="28" Width="110"/>
+        <Label x:Name="label_weap" Content="Weapon" HorizontalAlignment="Left" Margin="10,266,0,0" VerticalAlignment="Top" Height="28" Width="54" Visibility="Hidden"/>
+        <Label x:Name="label_amount" Content="Amount" HorizontalAlignment="Left" Margin="10,294,0,0" VerticalAlignment="Top" Height="28" Width="54" Visibility="Hidden"/>
 
-        <ComboBox x:Name="nameComboBox" Margin="69,12,0,0" Height="25" Width="140" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="IndexTextBox" HorizontalAlignment="Left" Margin="69,50,0,0" Text="{Binding index}" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-        <xctk:UShortUpDown x:Name="typeUShortUpDown" Margin="69,80,0,0"  Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+
+        <ComboBox x:Name="nameComboBox" Margin="69,12,0,0" Height="25" Width="140" VerticalAlignment="Top" HorizontalAlignment="Left" SelectionChanged="nameComboBox_SelectionChanged"/>
+        <xctk:UShortUpDown x:Name="typeUShortUpDown" Margin="82,80,0,0"  Height="20" Width="107" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <ComboBox x:Name="typeComboBox" Margin="90,80,0,0"  Height="20" Width="107" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden"/>
         <xctk:ShortUpDown x:Name="energyShortUpDown" Margin="69,115,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left" Value="255" />
-        <xctk:ByteUpDown x:Name="apperByteUpDown" Margin="90,145,0,0" Height="20" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <xctk:ByteUpDown x:Name="teamByteUpDown" Margin="69,178,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <ComboBox x:Name="apperCombobox" Margin="90,145,0,0" Height="20" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <ComboBox x:Name="teamComboBox" Margin="69,178,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <xctk:ShortUpDown x:Name="extraShortUpDown" Margin="69,210,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <xctk:ShortUpDown x:Name="att_actorNumShortUpDown" Margin="120,240,0,0" Height="20" Width="69" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-        <Image x:Name="mapImage" Margin="0,10,10,0" Height="256" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-        <Canvas x:Name="mapCanvas" Margin="0,10,10,0" Height="256" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Image x:Name="mapImage" Margin="0,5,20,0" Height="256" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Canvas x:Name="mapCanvas" Margin="0,5,20,0" Height="256" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right"/>
         <Slider x:Name="rotationSlider" Height="20" Width="256" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,297,10,0" AutoToolTipPlacement="TopLeft" Maximum="360" SmallChange="1" />
-        <Button x:Name="saveButton" Content="S A V E" HorizontalAlignment="Left" Margin="10,323,0,0" VerticalAlignment="Top" Width="200" Height="50" Click="saveButton_Click"/>
+        <Button x:Name="saveButton" Content="S A V E" HorizontalAlignment="Left" Margin="10,340,0,0" VerticalAlignment="Top" Width="154" Height="32" Click="saveButton_Click"/>
+        <ComboBox x:Name="weaponParams1" Margin="69,271,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.49,1.2" Visibility="Hidden"/>
+        <xctk:ByteUpDown x:Name="weaponParams2" Margin="69,299,0,0" Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden"/>
     </Grid>
 </Window>

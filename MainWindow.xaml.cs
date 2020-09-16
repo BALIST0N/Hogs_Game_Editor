@@ -108,7 +108,6 @@ namespace hogs_gameManager_wpf
                     }
                 }
                 
-
                 //clear to avoid Exceptions
                 this.MapObjectPropertiesControl.SelectedObject = null;
                 this.MapObjectsListView.Items.Clear();
@@ -270,7 +269,6 @@ namespace hogs_gameManager_wpf
             Canvas.SetTop(R, y+251);
 
         }
-
 
         private void SaveFile()
         {
