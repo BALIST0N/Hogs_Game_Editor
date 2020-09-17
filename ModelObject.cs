@@ -38,8 +38,7 @@ namespace hogs_gameEditor_wpf
             {
                 byte[] mapdata = new byte[fs.Length];
                 fs.Read(mapdata, 0, Convert.ToInt32(fs.Length));
-                int endContenTable = BitConverter.ToInt32(mapdata, 16);
-
+                int endContenTable = BitConverter.ToInt32(mapdata, 16); //the first item offset define table content size ! 
 
                 for (int i = 0; i <= endContenTable; i++)
                 {
@@ -63,15 +62,7 @@ namespace hogs_gameEditor_wpf
 
         public static List<ModelObject> recalculateOffsets(List<ModelObject> MADFILE)
         {
-            int tableContentSize = 0;
-            int offset;
-
-            foreach(ModelObject mod in MADFILE )
-            {
-                tableContentSize += mod.DataSize;
-            }
-
-            offset = tableContentSize;              //i could use tableContentSize as offset but lets not complicate everything please : )
+            int offset = MADFILE.Count * 24;        //table content size ! 
             foreach (ModelObject mod in MADFILE)
             {
                 mod.DataOffset = offset;
@@ -87,7 +78,7 @@ namespace hogs_gameEditor_wpf
 
             foreach(ModelObject mod in MADFILE)
             {
-                tableContent.AddRange( Encoding.ASCII.GetBytes(mod.Name) );
+                tableContent.AddRange(Encoding.ASCII.GetBytes(mod.Name));
                 tableContent.AddRange(BitConverter.GetBytes(mod.DataOffset));
                 tableContent.AddRange(BitConverter.GetBytes(mod.DataSize));
                 data.AddRange( mod.ModelData );

@@ -348,9 +348,7 @@ namespace hogs_gameManager_wpf
                 AddObjectWindow a = new AddObjectWindow(CurrentMapName, CurrentMap.Count);
                 a.Show();
             }
-            
         }
-
 
         private void MadModdingTool()
         {
@@ -362,13 +360,14 @@ namespace hogs_gameManager_wpf
 
             foreach (ModelObject modelobj in MADFILEofMods)
             {
-                if (MADFILE.Exists(x => x.Name == modelobj.Name) == false)
+                if (MADFILE.Any( x => x.Name.SequenceEqual(modelobj.Name) ) == false) 
                 {
                     MADFILE.Add(modelobj);
                     added++;
                 }
             }
 
+            MADFILE.OrderBy(x => x.Name);
             MADFILE = ModelObject.recalculateOffsets(MADFILE);
             ModelObject.SaveMadFile(MADFILE, CurrentMapName);
             MessageBox.Show("the tool have added " + added + " new MODEL(s) on the map " + CurrentMapName);
