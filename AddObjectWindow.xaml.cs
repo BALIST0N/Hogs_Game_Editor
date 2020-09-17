@@ -239,9 +239,9 @@ namespace hogs_gameEditor_wpf
 
             MapObjectV3 mo = new MapObjectV3();
             mo.name = GetSelectedName();
-            mo.unused0 = "NULL    ".ToCharArray();
+            mo.unused0 = "NULL\0\0\0\0\0\0\0\0\0\0\0\0".ToCharArray();
             mo.position = new short[] { Convert.ToInt16(left1), 10, Convert.ToInt16(-top1) };
-            mo.index = Convert.ToUInt16(index);
+            mo.index = Convert.ToUInt16(index+1);
             mo.angles = new short[] { 0, Convert.ToInt16(this.rotationSlider.Value), 0 };
             mo.type = (ushort)this.typeUShortUpDown.Value;
             mo.bounds = new short[] { 5, 5, 5 };
@@ -273,7 +273,10 @@ namespace hogs_gameEditor_wpf
         {          
             List<char> res = new List<char>();
             res.AddRange( itemsNameconvert[this.nameComboBox.Text].ToCharArray() );
-
+            for(int i = res.Count;i<16;i++)
+            {
+                res.Add('\0');
+            }
             return res.ToArray();
         }
 

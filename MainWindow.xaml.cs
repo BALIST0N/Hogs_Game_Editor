@@ -167,8 +167,14 @@ namespace hogs_gameManager_wpf
                 MessageBoxResult res = MessageBox.Show("are you sure you want to delete Object n°" + molv.Id + " (" + molv.Name + ") ","A T T E N T I O N ",MessageBoxButton.YesNo);
                 if(res == MessageBoxResult.Yes)
                 {
-                    //delete in CurrentMap and in the list
-                    //bool mapEdited = true
+                    CurrentMap.Remove( CurrentMap.Find(x => x.index == Convert.ToInt16( molv.Id) ) );
+                    this.MapObjectsListView.Items.Clear();
+                    foreach(MapObjectV3 mo in CurrentMap)
+                    {
+                        this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Team = Convert.ToString(mo.team) }); 
+                    }
+
+                    mapObjectEdited = true;
                 }
             }
         }
@@ -296,21 +302,23 @@ namespace hogs_gameManager_wpf
             List<byte> mapdataList = new List<byte>();
             mapdataList.AddRange(BitConverter.GetBytes(Convert.ToUInt16(CurrentMap.Count)));
             foreach (MapObjectV3 mo in CurrentMap) { mapdataList.AddRange(mo.ConvertToByteArray()); }
-            byte[] mapdataToSave = mapdataList.ToArray();
+            mapdataList.AddRange(new byte[] { 0, 0 });
 
-            //and then filestream etcc rewrite file "CurrentMapName".POG
+            using (FileStream fs = File.OpenWrite("D:/Games/IGG-HogsofWar/Maps/" + CurrentMapName + "_edited.POG"))
+            {
+                fs.Write(mapdataList.ToArray(), 0, mapdataList.Count);
+            }
         }
 
         private void SaveFile(List<MapObjectV3> map)//in case of ...?
         {
             List<byte> mapdataList = new List<byte>();
-            mapdataList.AddRange(BitConverter.GetBytes(Convert.ToUInt16(CurrentMap.Count)));
+            mapdataList.AddRange(BitConverter.GetBytes( Convert.ToUInt16(map.Count) ));
             foreach (MapObjectV3 mo in map) { mapdataList.AddRange(mo.ConvertToByteArray()); }
-            byte[] mapdataToSave = mapdataList.ToArray();
 
             using ( FileStream fs = File.OpenWrite("D:/Games/IGG-HogsofWar/Maps/" + CurrentMapName + "_edited.POG") )
             {
-                fs.Write(mapdataToSave, 0, mapdataToSave.Length );
+                fs.Write(mapdataList.ToArray(), 0, mapdataList.Count );
             }
         }
 
