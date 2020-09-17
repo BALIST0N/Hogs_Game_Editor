@@ -22,7 +22,7 @@ namespace hogs_gameEditor_wpf
         string mapName;
         int index;
         Dictionary<string, string> itemsNameconvert;
-        Dictionary<string, short> ranks;
+        Dictionary<string, ushort> ranks;
         Dictionary<string, byte> weaponList;
 
         public AddObjectWindow(string mapName,int index)
@@ -34,7 +34,7 @@ namespace hogs_gameEditor_wpf
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             itemsNameconvert = new Dictionary<string, string>();
-            ranks = new Dictionary<string, short>();
+            ranks = new Dictionary<string, ushort>();
             weaponList = new Dictionary<string, byte>();
 
             weaponParams1.ItemsSource = weaponList.Keys;
@@ -61,7 +61,7 @@ namespace hogs_gameEditor_wpf
             ranks.Add("Sapper MP", 19);
             ranks.Add("Scout MP", 20);
 
-            this.typeComboBox.ItemsSource = ranks.Keys;
+            this.rankComboBox.ItemsSource = ranks.Keys;
 
             this.teamComboBox.Items.Add(1);
             this.teamComboBox.Items.Add(2);
@@ -192,15 +192,15 @@ namespace hogs_gameEditor_wpf
         {
             if(this.nameComboBox.SelectedIndex != -1)
             {
-                if( (string)this.nameComboBox.SelectedItem == "Pig")
+                if(this.nameComboBox.SelectedIndex == 0)
                 {
-                    this.typeUShortUpDown.Visibility = Visibility.Hidden;
-                    this.typeComboBox.Visibility = Visibility.Visible;
+                    this.label_00000.Visibility = Visibility.Visible;
+                    this.rankComboBox.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    this.typeUShortUpDown.Visibility = Visibility.Visible;
-                    this.typeComboBox.Visibility = Visibility.Hidden;
+                    this.label_00000.Visibility = Visibility.Hidden;
+                    this.rankComboBox.Visibility = Visibility.Hidden;
                 }
 
                 if ((string)this.nameComboBox.SelectedItem == "Health Crate")
@@ -241,7 +241,7 @@ namespace hogs_gameEditor_wpf
             mo.position = new short[] { Convert.ToInt16(left1), 10, Convert.ToInt16(-top1) };
             mo.index = Convert.ToUInt16(index+1);
             mo.angles = new short[] { 0, Convert.ToInt16(this.rotationSlider.Value), 0 };
-            mo.type = (ushort)this.typeUShortUpDown.Value;
+            mo.type = GetRankOrType();
             mo.bounds = new short[] { 5, 5, 5 };
             mo.bounds_type = 1;
             mo.energy = (short)this.energyShortUpDown.Value;
@@ -265,6 +265,17 @@ namespace hogs_gameEditor_wpf
             main.mapObjectEdited = true;
             this.Close();
 
+        }
+
+        private ushort GetRankOrType()
+        {
+            ushort res = 0;
+            if(this.nameComboBox.SelectedIndex == 0 && this.rankComboBox.SelectedIndex != -1)
+            {
+                res = ranks[this.rankComboBox.SelectedItem.ToString()];
+            }
+
+            return res;
         }
 
         private char[] GetSelectedName()

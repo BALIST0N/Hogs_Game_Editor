@@ -142,7 +142,7 @@ namespace hogs_gameManager_wpf
                 }               
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
-                MadModdingTool();
+                //MadModdingTool();
 
                 //generate buttons with icons in the minimap
                 LoadMapObjects();
@@ -338,6 +338,8 @@ namespace hogs_gameManager_wpf
 
         private void MapObjectPropertiesControl_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
         {
+            this.CanvasImageMap.Children.Clear();
+            LoadMapObjects();
             this.mapObjectEdited = true;
         }
 
@@ -394,9 +396,10 @@ namespace hogs_gameManager_wpf
                 }
 
                 MADFILE = ModelObject.recalculateOffsets(MADFILE);
-                ModelObject.SaveMadFile(MADFILE, madfileName);
-                MessageBox.Show("the tool have added " + added + " new object in all the maps");
-            }*/
+                ModelObject.SaveMadFile(MADFILE, madfileName);  
+            }
+            MessageBox.Show("the tool have added " + added + " new object in all the maps");
+            */
         }
     }
 
