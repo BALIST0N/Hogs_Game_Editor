@@ -31,7 +31,6 @@ namespace hogs_gameEditor_wpf
             this.index = index;
             InitializeComponent();
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             itemsNameconvert = new Dictionary<string, string>();
@@ -63,7 +62,6 @@ namespace hogs_gameEditor_wpf
             ranks.Add("Scout MP", 20);
 
             this.typeComboBox.ItemsSource = ranks.Keys;
-
 
             this.teamComboBox.Items.Add(1);
             this.teamComboBox.Items.Add(2);
