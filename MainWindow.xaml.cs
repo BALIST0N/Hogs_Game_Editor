@@ -95,6 +95,18 @@ namespace hogs_gameManager_wpf
         {
             this.mapListComboBox.ItemsSource = MapList.Keys;
             this.MapObjectsListView.KeyUp += MapObjectsListView_KeyUp;
+
+            /*
+            int[] fermeLa = new int[] { 704, 364, 196, 316, 1504, 1000, 294, 244, 496, 928, 496, 624, 704, 358, 784, 358, 704, 358, 704, 220, 1584, 708, 1812, 1812, 208, 208, 534, 128, 352, 192, 448, 982, 1090, 482, 482, 544, 196, 1000, 344, 2080, 786, 1216, 740, 1216, 2080, 976, 976, 912, 576, 912, 576, 1288, 1696, 1288, 2104, 1494, 640, 256, 856, 192, 460, 744, 496, 144, 344, 232, 344, 568, 316, 192, 192, 568, 472, 352, 720, 376, 220, 638, 720, 556, 392, 320, 320, 424, 262, 388 };
+            string res = "";
+            int offset = 2064;
+            foreach(int nb in fermeLa)
+            {
+                res += offset + "\n\r";
+                offset += nb;
+            }
+
+            File.WriteAllText("D:/Games/IGG-HogsofWar/devtools/res.txt", res);*/
         }
 
         private void MapListComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -142,7 +154,7 @@ namespace hogs_gameManager_wpf
                 }               
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
-                //MadModdingTool();
+                MadMtdModdingTool();
 
                 //generate buttons with icons in the minimap
                 LoadMapObjects();
@@ -352,53 +364,39 @@ namespace hogs_gameManager_wpf
             }
         }
 
-        private void MadModdingTool()
+        private void MadMtdModdingTool()
         {
+            List<MadMtdObject> MADFILE = MadMtdObject.LoadFile(CurrentMapName,"MAD");
+            List<MadMtdObject> MADFILEofMods = MadMtdObject.LoadFile("MODDING","MAD");
+            MADFILE = MadMtdObject.MergeMadMtd(MADFILE, MADFILEofMods); 
+            MADFILE = MadMtdObject.recalculateOffsets(MADFILE);
+            MadMtdObject.SaveFile(MADFILE, CurrentMapName,"MAD");
 
-            int added = 0;
+            List<MadMtdObject> MtdFILE = MadMtdObject.LoadFile(CurrentMapName, "mtd");
+            List<MadMtdObject> MtdFILEofMods = MadMtdObject.LoadFile("MODDING", "mtd");
+            MtdFILE = MadMtdObject.MergeMadMtd(MtdFILE, MtdFILEofMods);
+            MtdFILE = MadMtdObject.recalculateOffsets(MtdFILE);
+            MadMtdObject.SaveFile(MtdFILE, CurrentMapName,"mtd");
 
-            List<ModelObject> MADFILE = ModelObject.LoadMADFile(CurrentMapName);
-            List<ModelObject> MADFILEofMods = ModelObject.LoadMADFile("MODDING");
 
-            foreach (ModelObject modelobj in MADFILEofMods)
-            {
-                if (MADFILE.Any( x => x.Name.SequenceEqual(modelobj.Name) ) == false) 
-                {
-                    MADFILE.Add(modelobj);
-                    added++;
-                }
-            }
-
-            MADFILE.OrderBy(x => x.Name);
-            MADFILE = ModelObject.recalculateOffsets(MADFILE);
-            ModelObject.SaveMadFile(MADFILE, CurrentMapName);
-            MessageBox.Show("the tool have added " + added + " new MODEL(s) on the map " + CurrentMapName);
+            //MessageBox.Show("the tool have added " + added + " new MODEL(s) on the map " + CurrentMapName);
 
 
             /*
             string[] filesNames = Directory.GetFiles("D:/Games/IGG-HogsofWar/Maps/", "*.MAD");
+            string[] filesNames2 = Directory.GetFiles("D:/Games/IGG-HogsofWar/Maps/", "*.mtd");
 
             int added = 0;
-            foreach(string madfileName in filesNames)
+            foreach(string madFileName in filesNames)
             {
-                madfileName.Replace("D:/Games/IGG-HogsofWar/Maps/", "");
-
-                List<ModelObject> MADFILE = ModelObject.LoadMADFile(madfileName);
-                List<ModelObject> MADFILEofMods = ModelObject.LoadMADFile("MODDING");
-
-                foreach (ModelObject modelobj in MADFILEofMods)
-                {
-                    if (MADFILE.Exists(x => x.Name == modelobj.Name) == false)
-                    {
-                        MADFILE.Add(modelobj);
-                        added++;
-                    }
-                }
-
-                MADFILE = ModelObject.recalculateOffsets(MADFILE);
-                ModelObject.SaveMadFile(MADFILE, madfileName);  
+                madFileName.Replace("D:/Games/IGG-HogsofWar/Maps/", "");
             }
-            MessageBox.Show("the tool have added " + added + " new object in all the maps");
+
+            foreach(string mtdFileName in filesNames2)
+            {
+                mtdFileName.Replace("D:/Games/IGG-HogsofWar/Maps/", "");
+            }
+
             */
         }
     }
