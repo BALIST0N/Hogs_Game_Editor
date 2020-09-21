@@ -24,11 +24,12 @@ namespace hogs_gameEditor_wpf
         Dictionary<string, string> itemsNameconvert;
         Dictionary<string, ushort> ranks;
         Dictionary<string, byte> weaponList;
-
-        public AddObjectWindow(string mapName,int index)
+        Dictionary<string, ushort> typesListCorrespondaces;
+        public AddObjectWindow(string mapName)
         {
+            MainWindow main = (MainWindow)Application.Current.MainWindow;
             this.mapName = mapName;
-            this.index = index;
+            this.index = main.CurrentMap.Count;
             InitializeComponent();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -36,6 +37,7 @@ namespace hogs_gameEditor_wpf
             itemsNameconvert = new Dictionary<string, string>();
             ranks = new Dictionary<string, ushort>();
             weaponList = new Dictionary<string, byte>();
+            typesListCorrespondaces = new Dictionary<string, ushort>();
 
             weaponParams1.ItemsSource = weaponList.Keys;
 
@@ -62,6 +64,23 @@ namespace hogs_gameEditor_wpf
             ranks.Add("Scout MP", 20);
 
             this.rankComboBox.ItemsSource = ranks.Keys;
+
+            typesListCorrespondaces.Add("Explosive Drum",393);
+            typesListCorrespondaces.Add("Gas Drum",435 );
+            typesListCorrespondaces.Add("Weapon Crate",67 );
+            typesListCorrespondaces.Add("Health Crate", 68);
+            typesListCorrespondaces.Add("Promotion Point", 395);
+            typesListCorrespondaces.Add("Tank",148 );
+            typesListCorrespondaces.Add("Water Tank", 64); //i dont know this one
+            typesListCorrespondaces.Add("Carry", 155);
+            typesListCorrespondaces.Add("Water Carry",136 );
+            typesListCorrespondaces.Add("Artillery", 93);
+            typesListCorrespondaces.Add("PillBox",96 );
+            typesListCorrespondaces.Add("Small Tent",74 );
+            typesListCorrespondaces.Add("Medical Tent (green)", 70);
+            typesListCorrespondaces.Add("Medical Tent (tan)",89 );
+            typesListCorrespondaces.Add("Shelter", 73);
+
 
             this.teamComboBox.Items.Add(1);
             this.teamComboBox.Items.Add(2);
@@ -92,15 +111,15 @@ namespace hogs_gameEditor_wpf
 
             this.nameComboBox.ItemsSource = itemsNameconvert.Keys;
 
-            weaponList.Add("Fist", 01);
-            weaponList.Add("Knife", 02);
-            weaponList.Add("Bajonett", 03);
+            weaponList.Add("Fist", 1);
+            weaponList.Add("Knife", 2);
+            weaponList.Add("Bajonett", 3);
             weaponList.Add("Saber", 04);
-            weaponList.Add("Cattle Prod", 05);
-            weaponList.Add("Pistol", 06);
-            weaponList.Add("Rifle", 07);
-            weaponList.Add("Rifle Burst", 08);
-            weaponList.Add("MG", 09);
+            weaponList.Add("Cattle Prod", 5);
+            weaponList.Add("Pistol", 6);
+            weaponList.Add("Rifle", 7);
+            weaponList.Add("Rifle Burst", 8);
+            weaponList.Add("MG", 9);
             weaponList.Add("Heavy MG", 10);
             weaponList.Add("Sniper Rifle", 11);
             weaponList.Add("Shotgun", 12);
@@ -196,6 +215,7 @@ namespace hogs_gameEditor_wpf
                 {
                     this.label_00000.Visibility = Visibility.Visible;
                     this.rankComboBox.Visibility = Visibility.Visible;
+                    this.energyShortUpDown.Value = 255;
                 }
                 else
                 {
@@ -207,6 +227,7 @@ namespace hogs_gameEditor_wpf
                 {
                     this.label_amount.Visibility = Visibility.Visible;
                     this.weaponParams2.Visibility = Visibility.Visible;
+                    this.energyShortUpDown.Value = 0;
                 }
                 else
                 {
@@ -220,6 +241,7 @@ namespace hogs_gameEditor_wpf
                     this.label_weap.Visibility = Visibility.Visible;
                     this.weaponParams1.Visibility = Visibility.Visible;
                     this.weaponParams2.Visibility = Visibility.Visible;
+                    this.energyShortUpDown.Value = 0;
                 }
                 else
                 {
@@ -240,14 +262,14 @@ namespace hogs_gameEditor_wpf
             mo.unused0 = "NULL\0\0\0\0\0\0\0\0\0\0\0\0".ToCharArray();
             mo.position = new short[] { Convert.ToInt16(left1), 10, Convert.ToInt16(-top1) };
             mo.index = Convert.ToUInt16(index+1);
-            mo.angles = new short[] { 0, Convert.ToInt16(this.rotationSlider.Value), 0 };
+            mo.angles = new short[] { 0, Convert.ToInt16(this.rotationSlider.Value * 11), 0 };
             mo.type = GetRankOrType();
             mo.bounds = new short[] { 5, 5, 5 };
             mo.bounds_type = 1;
             mo.energy = (short)this.energyShortUpDown.Value;
             mo.appearance = GetAppearance();
             mo.team =  Convert.ToByte( this.teamComboBox.SelectedItem);
-            mo.objective = 0;
+            mo.objective = GetObjective();
             mo.objective_actor_id = 0;
             mo.objective_extra = GetObjectiveParams();
             mo.unused1 = 0;
@@ -274,7 +296,10 @@ namespace hogs_gameEditor_wpf
             {
                 res = ranks[this.rankComboBox.SelectedItem.ToString()];
             }
-
+            else
+            {
+                res = typesListCorrespondaces[this.nameComboBox.SelectedItem.ToString()];
+            }
             return res;
         }
 
@@ -295,6 +320,17 @@ namespace hogs_gameEditor_wpf
             else { return 127; }
         }
 
+        private ushort GetObjective()
+        {
+            ushort res = 0;
+            if (this.nameComboBox.SelectedIndex == 3 || this.nameComboBox.SelectedIndex == 4)
+            {
+                res = 19;
+            }
+
+            return res;
+        }
+
         private byte[] GetObjectiveParams()
         {
             byte[] res = new byte[] { 0, 0 };
@@ -311,7 +347,7 @@ namespace hogs_gameEditor_wpf
                 res[1] = (byte)weaponParams2.Value;
             }
 
-            return new byte[] { 0, 0 };
+            return res;
         }
 
     }

@@ -154,7 +154,7 @@ namespace hogs_gameManager_wpf
                 }               
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
-                MadMtdModdingTool();
+                //MadMtdModdingTool();
 
                 //generate buttons with icons in the minimap
                 LoadMapObjects();
@@ -184,9 +184,12 @@ namespace hogs_gameManager_wpf
                 {
                     CurrentMap.Remove( CurrentMap.Find(x => x.index == Convert.ToInt16( molv.Id) ) );
                     this.MapObjectsListView.Items.Clear();
+                    ushort index = 1;
                     foreach(MapObjectV3 mo in CurrentMap)
                     {
-                        this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Team = Convert.ToString(mo.team) }); 
+                        mo.index = index;
+                        this.MapObjectsListView.Items.Add(newItem: new MapObjectsListViewItem { Name = new String(mo.name), Id = Convert.ToString(mo.index), Team = Convert.ToString(mo.team) });
+                        index++;
                     }
                     
                     this.CanvasImageMap.Children.Clear();
@@ -359,7 +362,7 @@ namespace hogs_gameManager_wpf
         {
             if(this.mapListComboBox.SelectedIndex != -1)
             {
-                AddObjectWindow a = new AddObjectWindow(CurrentMapName, CurrentMap.Count);
+                AddObjectWindow a = new AddObjectWindow(CurrentMapName);
                 a.Show();
             }
         }
