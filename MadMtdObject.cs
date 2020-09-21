@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace hogs_gameEditor_wpf
 {
@@ -64,7 +65,7 @@ namespace hogs_gameEditor_wpf
             return res;
         }
 
-        public static List<MadMtdObject> MergeMadMtd(List<MadMtdObject> baseFile, List<MadMtdObject> ModdedFile)
+        public static List<MadMtdObject> MergeWithModdedMadMtd(List<MadMtdObject> baseFile, List<MadMtdObject> ModdedFile)
         {
             int added = 0;
             foreach (MadMtdObject madMtdobj in ModdedFile)
@@ -100,15 +101,21 @@ namespace hogs_gameEditor_wpf
                 tableContent.AddRange(Encoding.ASCII.GetBytes(madMtdobj.Name));
                 tableContent.AddRange(BitConverter.GetBytes(madMtdobj.DataOffset));
                 tableContent.AddRange(BitConverter.GetBytes(madMtdobj.DataSize));
-                data.AddRange(madMtdobj.ModelData );
+                data.AddRange(madMtdobj.ModelData);
             }
             List<byte> res = tableContent;
             res.AddRange(data);
+
+            if(extension == "mtd")
+            {
+                mapName = mapName.ToLower();
+            }
 
             using (FileStream fs = File.OpenWrite("D:/Games/IGG-HogsofWar/Maps/" + mapName + "_edited." + extension))
             {
                 fs.Write(res.ToArray(), 0, res.Count);
             }
+            MessageBox.Show("Saved file " + mapName + "_edited." + extension);
  
         }
     }

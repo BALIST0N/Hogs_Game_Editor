@@ -19,7 +19,6 @@
         <Label x:Name="label_Copy4" Content="Attached Actor N#" HorizontalAlignment="Left" Margin="10,179,0,0" VerticalAlignment="Top" Height="28" Width="110"/>
         <Label x:Name="label_weap" Content="Weapon" HorizontalAlignment="Left" Margin="10,235,0,0" VerticalAlignment="Top" Height="28" Width="54" />
         <Label x:Name="label_amount" Content="Amount" HorizontalAlignment="Left" Margin="10,263,0,0" VerticalAlignment="Top" Height="28" Width="54"/>
-        <Label x:Name="label_energy_tip" Content="255 is default value" HorizontalAlignment="Left" Margin="194,55,0,0" VerticalAlignment="Top" Height="28" Width="100" FontSize="10"/>
 
         <ComboBox x:Name="nameComboBox" Margin="69,12,0,0" Height="25" Width="140" VerticalAlignment="Top" HorizontalAlignment="Left" SelectionChanged="nameComboBox_SelectionChanged"/>
         <ComboBox x:Name="rankComboBox" Margin="69,212,0,0"  Height="20" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>

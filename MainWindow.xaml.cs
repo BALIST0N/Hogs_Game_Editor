@@ -97,9 +97,9 @@ namespace hogs_gameManager_wpf
             this.MapObjectsListView.KeyUp += MapObjectsListView_KeyUp;
 
             /*
-            int[] fermeLa = new int[] { 704, 364, 196, 316, 1504, 1000, 294, 244, 496, 928, 496, 624, 704, 358, 784, 358, 704, 358, 704, 220, 1584, 708, 1812, 1812, 208, 208, 534, 128, 352, 192, 448, 982, 1090, 482, 482, 544, 196, 1000, 344, 2080, 786, 1216, 740, 1216, 2080, 976, 976, 912, 576, 912, 576, 1288, 1696, 1288, 2104, 1494, 640, 256, 856, 192, 460, 744, 496, 144, 344, 232, 344, 568, 316, 192, 192, 568, 472, 352, 720, 376, 220, 638, 720, 556, 392, 320, 320, 424, 262, 388 };
+            int[] fermeLa = new int[] { 928, 316, 294, 1390, 108, 1000, 364, 744, 496, 1504, 704, 496, 244, 196 };
             string res = "";
-            int offset = 2064;
+            int offset = 336;
             foreach(int nb in fermeLa)
             {
                 res += offset + "\n\r";
@@ -368,16 +368,19 @@ namespace hogs_gameManager_wpf
         }
 
         private void MadMtdModdingTool()
-        {
+        {          
+            
+            //MadMtdObject.SaveFile(MadMtdObject.recalculateOffsets( MadMtdObject.MergeWithModdedMadMtd(MadMtdObject.LoadFile(CurrentMapName, "MAD") , MadMtdObject.LoadFile("MODDING", "MAD")) ) , CurrentMapName,"MAD");
+
             List<MadMtdObject> MADFILE = MadMtdObject.LoadFile(CurrentMapName,"MAD");
             List<MadMtdObject> MADFILEofMods = MadMtdObject.LoadFile("MODDING","MAD");
-            MADFILE = MadMtdObject.MergeMadMtd(MADFILE, MADFILEofMods); 
+            MADFILE = MadMtdObject.MergeWithModdedMadMtd(MADFILE, MADFILEofMods);
             MADFILE = MadMtdObject.recalculateOffsets(MADFILE);
             MadMtdObject.SaveFile(MADFILE, CurrentMapName,"MAD");
 
             List<MadMtdObject> MtdFILE = MadMtdObject.LoadFile(CurrentMapName, "mtd");
             List<MadMtdObject> MtdFILEofMods = MadMtdObject.LoadFile("MODDING", "mtd");
-            MtdFILE = MadMtdObject.MergeMadMtd(MtdFILE, MtdFILEofMods);
+            MtdFILE = MadMtdObject.MergeWithModdedMadMtd(MtdFILE, MtdFILEofMods);
             MtdFILE = MadMtdObject.recalculateOffsets(MtdFILE);
             MadMtdObject.SaveFile(MtdFILE, CurrentMapName,"mtd");
 

@@ -248,6 +248,11 @@ namespace hogs_gameEditor_wpf
                     this.label_weap.Visibility = Visibility.Hidden;
                     this.weaponParams1.Visibility = Visibility.Hidden;
                 }
+
+                if (this.nameComboBox.SelectedIndex == 5)
+                {
+                    this.energyShortUpDown.Value = 0;
+                }
             }
         }
 
@@ -323,7 +328,7 @@ namespace hogs_gameEditor_wpf
         private ushort GetObjective()
         {
             ushort res = 0;
-            if (this.nameComboBox.SelectedIndex == 3 || this.nameComboBox.SelectedIndex == 4)
+            if (this.nameComboBox.SelectedIndex == 3 || this.nameComboBox.SelectedIndex == 4 || this.nameComboBox.SelectedIndex == 5)
             {
                 res = 19;
             }
@@ -345,6 +350,12 @@ namespace hogs_gameEditor_wpf
             {
                 res[0] = 255;
                 res[1] = (byte)weaponParams2.Value;
+            }
+
+            if (this.nameComboBox.SelectedIndex == 5)
+            {
+                res[0] = 1;
+                res[1] = 1;
             }
 
             return res;
