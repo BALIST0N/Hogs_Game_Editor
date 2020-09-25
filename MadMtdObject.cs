@@ -7,17 +7,17 @@ using System.Windows;
 
 namespace hogs_gameEditor_wpf
 {
-    class MadMtdObject //total : 24 bytes
+    class MadMtdObject //total : 24 bytes (both file types have same structure)
     {
         public char[] Name     { get; set; }  //[16]
         int DataOffset  { get; set; }  //[4]
         int DataSize    { get; set; }  //[4]
-        byte[] ModelData    { get; set; } // model in the .mad starting at this.DataOffset 
+        byte[] ModelData    { get; set; } // model in the .mad starting at this.DataOffset
         FAC facData { get; set; }
 
         public MadMtdObject(byte[] hexblock)
         {
-            this.Name = Encoding.ASCII.GetChars(hexblock[0..15]);
+            this.Name = Encoding.ASCII.GetChars(hexblock[0..16]);
             this.DataOffset = BitConverter.ToInt32(hexblock, 16);
             this.DataSize = BitConverter.ToInt32(hexblock, 20);
         }
@@ -30,7 +30,6 @@ namespace hogs_gameEditor_wpf
             this.ModelData = modeldata;
         }
 
-
         public static List<MadMtdObject> LoadFile(string mapname,string extention)
         {
             List<MadMtdObject> res = new List<MadMtdObject>();
@@ -42,39 +41,45 @@ namespace hogs_gameEditor_wpf
 
                 for (int i = 0; i <= endContenTable; i++)
                 {
-                    int endblock = i + 24;
+                    int endblockContentTable = i + 24;
 
-                    if(endblock < endContenTable)
+                    if(endblockContentTable <= endContenTable)
                     {
-                        MadMtdObject tempMod_o = new MadMtdObject(mapdata[i..endblock]);
+                        MadMtdObject modobj = new MadMtdObject(mapdata[i..endblockContentTable]);
 
-                        int endDataBlock = tempMod_o.DataOffset + tempMod_o.DataSize;
-                        MadMtdObject modobj = new MadMtdObject(mapdata[i..endblock], mapdata[tempMod_o.DataOffset..endDataBlock]);
+                        int endDataBlock = modobj.DataOffset + modobj.DataSize;
+                        modobj.ModelData = mapdata[modobj.DataOffset..endDataBlock];
 
                         if (new string(modobj.Name).Contains(".FAC") == true )
                         {
-                            //modobj.facData = new FAC(modobj.ModelData);
+                            modobj.facData = new FAC(modobj.ModelData);
                         }
 
                         res.Add(modobj);
                     }
                     i += 23;
-                }
+                }               
             }
+            
+            /*
+            string text = mapname +"."+ extention + "\n";
+            foreach(MadMtdObject mmobj in res)
+            {
+                text += new string(mmobj.Name) + "=" + mmobj.DataOffset + "="+ mmobj.DataSize  + "\n";
+                string filename = new string(mmobj.Name).TrimEnd('\0');
+                File.WriteAllBytes("D:/Games/IGG-HogsofWar/devtools/ext_ed/" + filename, mmobj.ModelData);
+            }
+            File.WriteAllText("D:/Games/IGG-HogsofWar/devtools/ext_ed/fakeLog.ini", text);*/
 
             return res;
         }
 
+
         public static List<MadMtdObject> MergeWithModdedMadMtd(List<MadMtdObject> baseFile, List<MadMtdObject> ModdedFile)
         {
-            int added = 0;
             foreach (MadMtdObject madMtdobj in ModdedFile)
             {
-                if (baseFile.Any(x => x.Name.SequenceEqual(madMtdobj.Name)) == false)
-                {
-                    baseFile.Add(madMtdobj);
-                    added++;
-                }
+                if (baseFile.Any(x => x.Name.SequenceEqual(madMtdobj.Name)) == false) {  baseFile.Add(madMtdobj); } //check if model or texture already exist in the basefile
             }
             return baseFile;
         }
