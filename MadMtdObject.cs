@@ -96,6 +96,46 @@ namespace hogs_gameEditor_wpf
             return FILE;
         }
 
+        public static List<MadMtdObject> ModifyFACIndexes(List<MadMtdObject> MAD, List<MadMtdObject> MTD)
+        {
+            foreach(MadMtdObject madobj in MAD)
+            {
+                if(madobj.facData != null)
+                {
+                    string facName = new string(madobj.Name).Trim('\0');
+                    facName = facName.Substring(0,facName.Length - 4);
+                    int counter = 0;
+                    bool skipTriangles = false;
+
+                    foreach(MadMtdObject mtdobj in MTD)
+                    {
+                        if(new string(mtdobj.Name).Contains(facName) == true )
+                        {
+                            if(madobj.facData.triangleCount != 0 && skipTriangles == false)
+                            {
+                                if(counter < madobj.facData.triangleCount)
+                                {
+                                    madobj.facData.triangleTextureIndex[counter] = MTD.IndexOf(mtdobj);
+                                }
+                                else
+                                {
+                                    skipTriangles = true;
+                                    counter = 0;
+                                }
+                            }
+                            else
+                            {
+                                madobj.facData.planeTextureIndex[counter] = MTD.IndexOf(mtdobj);
+                            }
+                            counter++;
+                        }
+                    }
+                    madobj.ModelData = FAC.OverrideHexIndexes(madobj.facData, madobj.ModelData);
+                }
+            }
+            return MAD;
+        }
+
         public static void SaveFile(List<MadMtdObject> FILE, string mapName,string extension)
         {
             List<byte> tableContent = new List<byte>();

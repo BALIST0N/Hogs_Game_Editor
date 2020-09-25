@@ -376,14 +376,16 @@ namespace hogs_gameManager_wpf
             List<MadMtdObject> MADFILEofMods = MadMtdObject.LoadFile("MODDING","MAD");
             MADFILE = MadMtdObject.MergeWithModdedMadMtd(MADFILE, MADFILEofMods);
             MADFILE = MadMtdObject.recalculateOffsets(MADFILE);
-            //MadMtdObject.SaveFile(MADFILE, CurrentMapName,"MAD");
-
+            
             List<MadMtdObject> MtdFILE = MadMtdObject.LoadFile(CurrentMapName, "mtd");
             List<MadMtdObject> MtdFILEofMods = MadMtdObject.LoadFile("MODDING", "mtd");
             MtdFILE = MadMtdObject.MergeWithModdedMadMtd(MtdFILE, MtdFILEofMods);
             MtdFILE = MadMtdObject.recalculateOffsets(MtdFILE);
-            //MadMtdObject.SaveFile(MtdFILE, CurrentMapName,"mtd");
 
+            MADFILE = MadMtdObject.ModifyFACIndexes(MADFILE, MtdFILE);
+            
+            MadMtdObject.SaveFile(MADFILE, CurrentMapName,"MAD");
+            MadMtdObject.SaveFile(MtdFILE, CurrentMapName,"mtd");
 
             /*
             string[] filesNames = Directory.GetFiles("D:/Games/IGG-HogsofWar/Maps/", "*.MAD");
