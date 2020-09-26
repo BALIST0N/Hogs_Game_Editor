@@ -1,4 +1,5 @@
-﻿using System;
+﻿using hogs_gameManager_wpf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -96,44 +97,51 @@ namespace hogs_gameEditor_wpf
             return FILE;
         }
 
-        public static List<MadMtdObject> ModifyFACIndexes(List<MadMtdObject> MAD, List<MadMtdObject> MTD)
+        public static void ModifyFACIndexes(List<MadMtdObject> MAD, List<MadMtdObject> MTD)
         {
-            foreach(MadMtdObject madobj in MAD)
-            {
-                if(madobj.facData != null)
-                {
-                    string facName = new string(madobj.Name).Trim('\0');
-                    facName = facName.Substring(0,facName.Length - 4);
-                    int counter = 0;
-                    bool skipTriangles = false;
+            MainWindow main = (MainWindow)Application.Current.MainWindow;
 
-                    foreach(MadMtdObject mtdobj in MTD)
+            foreach (MadMtdObject madobj in MAD)
+            {
+                if (madobj.facData != null)     //if model file is .FAC
+                {
+                    string facName = new string(madobj.Name).Trim('\0');    //Convert char array to string
+                    facName = facName.Substring(0, facName.Length - 4);     //remove Extention
+                    int counter = 0;                                        //counter for number of texture of a model
+                    bool skipTriangles = false;                             //when all trianglesTexNumber are filled
+
+                    if( main.TableOfTextureAdded.ContainsKey(facName) )     // if there is a match with added models
                     {
-                        if(new string(mtdobj.Name).Contains(facName) == true )
+                        foreach (MadMtdObject mtdobj in MTD)
                         {
-                            if(madobj.facData.triangleCount != 0 && skipTriangles == false)
+                            string TIMFileName = new string(mtdobj.Name).Trim('\0');
+                            string found = main.TableOfTextureAdded[facName].Find(x => x == TIMFileName);
+
+                            if(TIMFileName == found)        //if texture match with corresponding model
                             {
-                                if(counter < madobj.facData.triangleCount)
+                                if (madobj.facData.triangleCount != 0 && skipTriangles == false)    //avoid filling only triangles, throw errors
                                 {
-                                    madobj.facData.triangleTextureIndex[counter] = MTD.IndexOf(mtdobj);
+                                    if (counter < madobj.facData.triangleCount)
+                                    {
+                                        madobj.facData.triangleTextureIndex[counter] = MTD.IndexOf(mtdobj); //replace actual number with index of the texture
+                                    }
+                                    else
+                                    {
+                                        skipTriangles = true;
+                                        counter = 0;
+                                    }
                                 }
                                 else
                                 {
-                                    skipTriangles = true;
-                                    counter = 0;
+                                    madobj.facData.planeTextureIndex[counter] = MTD.IndexOf(mtdobj);
                                 }
+                                counter++;
                             }
-                            else
-                            {
-                                madobj.facData.planeTextureIndex[counter] = MTD.IndexOf(mtdobj);
-                            }
-                            counter++;
                         }
                     }
                     madobj.ModelData = FAC.OverrideHexIndexes(madobj.facData, madobj.ModelData);
                 }
             }
-            return MAD;
         }
 
         public static void SaveFile(List<MadMtdObject> FILE, string mapName,string extension)
@@ -161,7 +169,8 @@ namespace hogs_gameEditor_wpf
                 fs.Write(res.ToArray(), 0, res.Count);
             }
             MessageBox.Show("Saved file " + mapName + "_edited." + extension);
- 
         }
+
+
     }
 }

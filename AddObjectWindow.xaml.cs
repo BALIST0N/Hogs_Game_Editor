@@ -25,6 +25,7 @@ namespace hogs_gameEditor_wpf
         Dictionary<string, ushort> ranks;
         Dictionary<string, byte> weaponList;
         Dictionary<string, ushort> typesListCorrespondaces;
+
         public AddObjectWindow(string mapName)
         {
             MainWindow main = (MainWindow)Application.Current.MainWindow;
@@ -93,7 +94,7 @@ namespace hogs_gameEditor_wpf
             this.apperCombobox.Items.Add("Player");
 
             itemsNameconvert.Add("Pig","GR_ME");
-            itemsNameconvert.Add("Explosive Drum", "DRUM1");
+            itemsNameconvert.Add("Explosive Drum", "DRUM");
             itemsNameconvert.Add("Gas Drum", "DRUM2");
             itemsNameconvert.Add("Weapon Crate", "CRATE1");
             itemsNameconvert.Add("Health Crate", "CRATE2");
@@ -101,7 +102,7 @@ namespace hogs_gameEditor_wpf
             itemsNameconvert.Add("Tank", "TANK");
             itemsNameconvert.Add("Water Tank", "AM_TANK");
             itemsNameconvert.Add("Carry", "CARRY");
-            itemsNameconvert.Add("Water Carry", "AM_CARRY");
+            itemsNameconvert.Add("Water Carry", "AMLAUNCH");
             itemsNameconvert.Add("Artillery", "BIG_GUN");
             itemsNameconvert.Add("PillBox", "PILLBOX");
             itemsNameconvert.Add("Small Tent", "TENT_S");

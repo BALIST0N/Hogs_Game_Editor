@@ -22,6 +22,8 @@ namespace hogs_gameManager_wpf
         public List<MapObjectV3> CurrentMap;
         string CurrentMapName;
         public bool mapObjectEdited = false;
+        public Dictionary<string, List<string>> TableOfTextureAdded;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -89,6 +91,151 @@ namespace hogs_gameManager_wpf
             this.MapList = MapList.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             #endregion
 
+            #region instance texure/models
+
+            this.TableOfTextureAdded = new Dictionary<string, List<string>>()
+            {
+                {"AMLAUNCH", new List<string>()
+                    {"AM-SIDE3.TIM",
+                    "AM-WEELS.TIM",
+                    "AM-SIDE2.TIM",
+                    "AM-TOPA1.TIM",
+                    "AM-BACK.TIM",
+                    "AM-TOP3.TIM",
+                    "AM-SIDE.TIM",
+                    "AM-TOP2.TIM",
+                    "AM-TOP1.TIM",
+                    "AM-UNDA2.TIM",
+                    "AM-TOP4.TIM",
+                    "AM-FNTL.TIM",
+                    "AM-UNDA1.TIM",
+                    "AM-HACH2.TIM",
+                    "AM-HACH1.TIM",
+                    "AM-FNTR.TIM"}
+                },
+                {"TANK", new List<string>()
+                    {"TANK1000.TIM",
+                    "TANK1001.TIM",
+                    "TANK1002.TIM",
+                    "TANK1003.TIM",
+                    "TANK1004.TIM",
+                    "TANK1005.TIM",
+                    "TANK1006.TIM",
+                    "TANK1008.TIM",
+                    "TANK1007.TIM",
+                    "TANK1009.TIM",
+                    "TANK1010.TIM",
+                    "TANK1011.TIM",
+                    "TANK1012.TIM",
+                    "TANK1013.TIM"}
+                },
+                {"PILLBOX", new List<string>()
+                    {"L-FRONT2.TIM",
+                    "L-TOP4.TIM",
+                    "L-SIDE3.TIM",
+                    "L-TOP5.TIM",
+                    "L-TOP2.TIM",
+                    "L-SIDE4.TIM",
+                    "L-FRONT1.TIM",
+                    "L-SIDE2.TIM",
+                    "L-SIDE1.TIM",
+                    "L-TUR1.TIM",
+                    "L-TUR2.TIM",
+                    "L-BACK1.TIM",
+                    "L-TOP6.TIM",
+                    "L-TOP3.TIM"}
+                },
+
+                {"BIG_GUN", new List<string>()
+                    {"BIGN002.TIM",
+                    "BIGN005.TIM",
+                    "BIGN006.TIM",
+                    "BIGN001.TIM",
+                    "BIGN006.TIM",
+                    "BIGN005.TIM",
+                    "BIGN006.TIM",
+                    "BIGN005.TIM",
+                    "BIGN013.TIM",
+                    "BIGN015.TIM",
+                    "BIGN012.TIM",
+                    "BIGN010.TIM",
+                    "BIGN011.TIM",
+                    "BIGN004.TIM",
+                    "BIGN003.TIM",
+                    "BIGN016.TIM",
+                    "BIGN009.TIM",
+                    "BIGN008.TIM",
+                    "BIGN007.TIM",
+                    "BIGN000.TIM"}
+                },
+                {"CARRY", new List<string>()
+                    {"AM-SIDE3.TIM",
+                    "AM-WEELS.TIM",
+                    "AM-SIDE2.TIM",
+                    "AM-TOPA1.TIM",
+                    "AM-BACK.TIM",
+                    "AM-TOP3.TIM",
+                    "AM-SIDE.TIM",
+                    "AM-TOP2.TIM",
+                    "AM-TOP1.TIM",
+                    "AM-UNDA2.TIM",
+                    "AM-TOP4.TIM",
+                    "AM-FNTL.TIM",
+                    "AM-UNDA1.TIM",
+                    "AM-HACH2.TIM",
+                    "AM-HACH1.TIM",
+                    "AM-FNTR.TIM"}
+                },
+                {"DRUM", new List<string>()
+                    {"DRUM000.TIM",
+                    "DRUM001.TIM",
+                    "DRUM002.TIM"}
+                },
+                {"DRUM2", new List<string>()
+                    {"DRUM000.TIM",
+                    "DRUM001.TIM",
+                    "DRUM003.TIM"}
+                },
+                {"M_TENT1", new List<string>()
+                    {"T_M002.TIM",
+                    "T_M000.TIM",
+                    "T_M001.TIM",
+                    "T_M005.TIM"}
+                },
+                {"M_TENT2", new List<string>()
+                    {"T_M002.TIM",
+                    "T_M000.TIM",
+                    "T_M001.TIM",
+                    "T_M005A.TIM"
+                    }
+                },
+                {"TENT_S", new List<string>()
+                    {"T_S001.TIM",
+                    "T_S002.TIM",
+                    "T_S000.TIM"
+                    }
+                },
+                {"SHELTER", new List<string>()
+                    {"SHEL_1.TIM",
+                    "SHEL_2.TIM",
+                    "SHEL_5.TIM",
+                    "SHEL_3.TIM",
+                    "SHEL_4.TIM"}
+                },
+                {"AM_TANK", new List<string>()
+                    {"AMTA007.TIM",
+                    "AMTA006.TIM",
+                    "AMTA005.TIM",
+                    "AMTA004.TIM",
+                    "AMTA000.TIM",
+                    "AMTA003.TIM",
+                    "AMTA002.TIM",
+                    "AMTA001.TIM"}
+                }
+            };
+
+            #endregion
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -154,7 +301,7 @@ namespace hogs_gameManager_wpf
                 }               
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
-                MadMtdModdingTool();
+                //MadMtdModdingTool();
 
                 //generate buttons with icons in the minimap
                 LoadMapObjects();
@@ -368,7 +515,7 @@ namespace hogs_gameManager_wpf
         }
 
         private void MadMtdModdingTool()
-        {          
+        {
             
             //MadMtdObject.SaveFile(MadMtdObject.recalculateOffsets( MadMtdObject.MergeWithModdedMadMtd(MadMtdObject.LoadFile(CurrentMapName, "MAD") , MadMtdObject.LoadFile("MODDING", "MAD")) ) , CurrentMapName,"MAD");
 
@@ -382,7 +529,7 @@ namespace hogs_gameManager_wpf
             MtdFILE = MadMtdObject.MergeWithModdedMadMtd(MtdFILE, MtdFILEofMods);
             MtdFILE = MadMtdObject.recalculateOffsets(MtdFILE);
 
-            MADFILE = MadMtdObject.ModifyFACIndexes(MADFILE, MtdFILE);
+            MadMtdObject.ModifyFACIndexes(MADFILE, MtdFILE);
             
             MadMtdObject.SaveFile(MADFILE, CurrentMapName,"MAD");
             MadMtdObject.SaveFile(MtdFILE, CurrentMapName,"mtd");
