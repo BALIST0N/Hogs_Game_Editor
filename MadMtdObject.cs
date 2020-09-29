@@ -11,10 +11,10 @@ namespace hogs_gameEditor_wpf
     class MadMtdObject //total : 24 bytes (both file types have same structure)
     {
         public char[] Name     { get; set; }  //[16]
-        int DataOffset  { get; set; }  //[4]
-        int DataSize    { get; set; }  //[4]
-        byte[] ModelData    { get; set; } // model in the .mad starting at this.DataOffset
-        FAC facData { get; set; }
+        public int DataOffset  { get; set; }  //[4]
+        public int DataSize    { get; set; }  //[4]
+        public byte[] ModelData    { get; set; } // model in the .mad starting at this.DataOffset
+        public FAC facData { get; set; }
 
         public MadMtdObject(byte[] hexblock)
         {
@@ -76,11 +76,11 @@ namespace hogs_gameEditor_wpf
         }
 
 
-        public static List<MadMtdObject> MergeWithModdedMadMtd(List<MadMtdObject> baseFile, List<MadMtdObject> ModdedFile)
+        public static List<MadMtdObject> MergeWithModdedMadMtd(List<MadMtdObject> baseFile, List<MadMtdObject> ExtraFile)
         {
-            foreach (MadMtdObject madMtdobj in ModdedFile)
+            foreach (MadMtdObject madMtdobj in ExtraFile)
             {
-                if (baseFile.Any(x => x.Name.SequenceEqual(madMtdobj.Name)) == false) {  baseFile.Add(madMtdobj); } //check if model or texture already exist in the basefile
+                if (baseFile.Any(x => new string(x.Name) == new string(madMtdobj.Name) ) == false) { baseFile.Add(madMtdobj); } //check if model or texture already exist in the basefile
             }
             return baseFile;
         }
@@ -97,7 +97,7 @@ namespace hogs_gameEditor_wpf
             return FILE;
         }
 
-        public static void ModifyFACIndexes(List<MadMtdObject> MAD, List<MadMtdObject> MTD)
+        public static List<MadMtdObject> ModifyFACIndexes(List<MadMtdObject> MAD, List<MadMtdObject> MTD)
         {
             MainWindow main = (MainWindow)Application.Current.MainWindow;
 
@@ -106,42 +106,73 @@ namespace hogs_gameEditor_wpf
                 if (madobj.facData != null)     //if model file is .FAC
                 {
                     string facName = new string(madobj.Name).Trim('\0');    //Convert char array to string
-                    facName = facName.Substring(0, facName.Length - 4);     //remove Extention
-                    int counter = 0;                                        //counter for number of texture of a model
-                    bool skipTriangles = false;                             //when all trianglesTexNumber are filled
+                    facName = facName.Substring(0, facName.Length - 4);     //remove Extention                          
 
                     if( main.TableOfTextureAdded.ContainsKey(facName) )     // if there is a match with added models
                     {
-                        foreach (MadMtdObject mtdobj in MTD)
+                        for(int i = 0; i < madobj.facData.triangleCount;i++)
                         {
-                            string TIMFileName = new string(mtdobj.Name).Trim('\0');
-                            string found = main.TableOfTextureAdded[facName].Find(x => x == TIMFileName);
+                            string actualTextureName = new string(MTD.ElementAt(madobj.facData.triangleTextureIndex[i]).Name).Trim('\0');
 
-                            if(TIMFileName == found)        //if texture match with corresponding model
+                            if (main.TableOfTextureAdded[facName].Exists(x => x == actualTextureName) == false) //check if the actual textureIndex is the right texture
                             {
-                                if (madobj.facData.triangleCount != 0 && skipTriangles == false)    //avoid filling only triangles, throw errors
+                                string texturePicked = main.TableOfTextureAdded[facName][new Random().Next(0, main.TableOfTextureAdded[facName].Count)];
+                                int tempSurfaceIndex = MTD.FindIndex(x => new string(x.Name).Trim('\0') == texturePicked );
+                                madobj.facData.triangleTextureIndex[i] = tempSurfaceIndex;
+                            }
+                        }
+
+                        for(int i = 0; i < madobj.facData.planeCount; i++)
+                        {
+                            string actualTextureName = new string(MTD.ElementAt(madobj.facData.planeTextureIndex[i]).Name).Trim('\0');
+
+                            if (main.TableOfTextureAdded[facName].Exists(x => x == actualTextureName) == false) //check if the actual textureIndex is the right texture
+                            {
+                                string texturePicked = main.TableOfTextureAdded[facName][0];
+                                int tempSurfaceIndex = MTD.FindIndex(x => new string(x.Name).Trim('\0') == texturePicked);
+                                madobj.facData.planeTextureIndex[i] = tempSurfaceIndex;
+                            }
+
+                        }
+
+                        //modify modeldata
+                        int index = 20;     //(16 + 4)
+                        if (madobj.facData.triangleCount != 0)
+                        {
+                            foreach (int triangleIndex in madobj.facData.triangleTextureIndex)
+                            {
+                                byte[] temp = BitConverter.GetBytes(triangleIndex);
+
+                                index += 20;    //to pick the first "triangle.TextureIndex " in the byte array : index + 20)
+                                for (int i = 0; i < 4; i++)
                                 {
-                                    if (counter < madobj.facData.triangleCount)
-                                    {
-                                        madobj.facData.triangleTextureIndex[counter] = MTD.IndexOf(mtdobj); //replace actual number with index of the texture
-                                    }
-                                    else
-                                    {
-                                        skipTriangles = true;
-                                        counter = 0;
-                                    }
+                                    madobj.ModelData[index] = temp[i];
+                                    index++;
                                 }
-                                else
+                                index += 8;
+                            }
+                        }
+
+                        if (madobj.facData.planeCount != 0)
+                        {
+                            index += 4;     //plane.count int skip
+                            foreach (int planeIndex in madobj.facData.planeTextureIndex)
+                            {
+                                byte[] temp = BitConverter.GetBytes(planeIndex);
+                                index += 24;
+                                for (int i = 0; i < 4; i++)
                                 {
-                                    madobj.facData.planeTextureIndex[counter] = MTD.IndexOf(mtdobj);
+                                    madobj.ModelData[index] = temp[i];
+                                    index++;
                                 }
-                                counter++;
+                                index += 8;
                             }
                         }
                     }
-                    madobj.ModelData = FAC.OverrideHexIndexes(madobj.facData, madobj.ModelData);
                 }
+
             }
+            return MAD;
         }
 
         public static void SaveFile(List<MadMtdObject> FILE, string mapName,string extension)
@@ -170,7 +201,5 @@ namespace hogs_gameEditor_wpf
             }
             MessageBox.Show("Saved file " + mapName + "_edited." + extension);
         }
-
-
     }
 }

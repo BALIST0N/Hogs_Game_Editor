@@ -301,7 +301,7 @@ namespace hogs_gameManager_wpf
                 }               
                 this.MapImageControl.Source = new BitmapImage(new Uri("file://D:/Games/IGG-HogsofWar/Maps/pngs/"+ CurrentMapName + ".png")); //loading the center map
 
-                //MadMtdModdingTool();
+                MadMtdModdingTool();
 
                 //generate buttons with icons in the minimap
                 LoadMapObjects();
@@ -526,10 +526,11 @@ namespace hogs_gameManager_wpf
             
             List<MadMtdObject> MtdFILE = MadMtdObject.LoadFile(CurrentMapName, "mtd");
             List<MadMtdObject> MtdFILEofMods = MadMtdObject.LoadFile("MODDING", "mtd");
+            int textureIndexOffset = MtdFILE.Count;
             MtdFILE = MadMtdObject.MergeWithModdedMadMtd(MtdFILE, MtdFILEofMods);
             MtdFILE = MadMtdObject.recalculateOffsets(MtdFILE);
 
-            MadMtdObject.ModifyFACIndexes(MADFILE, MtdFILE);
+            MADFILE = MadMtdObject.ModifyFACIndexes(MADFILE,MtdFILE);
             
             MadMtdObject.SaveFile(MADFILE, CurrentMapName,"MAD");
             MadMtdObject.SaveFile(MtdFILE, CurrentMapName,"mtd");

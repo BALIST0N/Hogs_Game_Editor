@@ -47,41 +47,6 @@ namespace hogs_gameEditor_wpf
 
         }
 
-        public static byte[] OverrideHexIndexes(FAC fac, byte[] facData)
-        {
-            int index = 20;     //(16 + 4)
-            if (fac.triangleCount != 0)
-            { 
-                foreach ( int triangleIndex in fac.triangleTextureIndex)
-                {
-                    byte[] temp = BitConverter.GetBytes(triangleIndex);
 
-                    index += 20;    //to pick the first "triangle.TextureIndex " in the byte array : index + 20)
-                    for(int i = 0; i < 4; i++)
-                    {
-                        facData[index] = temp[i];
-                        index++;
-                    }
-                    index += 8; 
-                }
-            }
-
-            if (fac.planeCount != 0)
-            {
-                index += 4; //plane.count int skip
-                foreach( int planeIndex in fac.planeTextureIndex)
-                {
-                    byte[] temp = BitConverter.GetBytes(planeIndex);
-                    index += 24;
-                    for (int i = 0; i < 4; i++)
-                    {
-                        facData[index] = temp[i];
-                        index++;
-                    }
-                    index += 8;
-                }
-            }
-            return facData;
-        }
     }
 }
