@@ -116,7 +116,7 @@ namespace hogs_gameEditor_wpf
 
                             if (main.TableOfTextureAdded[facName].Exists(x => x == actualTextureName) == false) //check if the actual textureIndex is the right texture
                             {
-                                string texturePicked = main.TableOfTextureAdded[facName][new Random().Next(0, main.TableOfTextureAdded[facName].Count)];
+                                string texturePicked = main.TableOfTextureAdded[facName][0];
                                 int tempSurfaceIndex = MTD.FindIndex(x => new string(x.Name).Trim('\0') == texturePicked );
                                 madobj.facData.triangleTextureIndex[i] = tempSurfaceIndex;
                             }

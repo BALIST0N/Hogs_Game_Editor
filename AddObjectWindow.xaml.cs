@@ -106,8 +106,8 @@ namespace hogs_gameEditor_wpf
             itemsNameconvert.Add("Artillery", "BIG_GUN");
             itemsNameconvert.Add("PillBox", "PILLBOX");
             itemsNameconvert.Add("Small Tent", "TENT_S");
-            itemsNameconvert.Add("Medical Tent (green)", "M_TENT1");
-            itemsNameconvert.Add("Medical Tent (tan)", "M_TENT2");
+            itemsNameconvert.Add("Medic Tent", "M_TENT1");
+            itemsNameconvert.Add("Mash Tent", "M_TENT2");
             itemsNameconvert.Add("Shelter", "SHELTER");
 
             this.nameComboBox.ItemsSource = itemsNameconvert.Keys;
