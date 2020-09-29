@@ -112,11 +112,11 @@ namespace hogs_gameEditor_wpf
                     {
                         for(int i = 0; i < madobj.facData.triangleCount;i++)
                         {
-                            string actualTextureName = new string(MTD.ElementAt(madobj.facData.triangleTextureIndex[i]).Name).Trim('\0');
+                            string actualTextureName = new string( MTD.ElementAt(madobj.facData.triangleTextureIndex[i]).Name ).Trim('\0');
 
                             if (main.TableOfTextureAdded[facName].Exists(x => x == actualTextureName) == false) //check if the actual textureIndex is the right texture
                             {
-                                string texturePicked = main.TableOfTextureAdded[facName][0];
+                                string texturePicked = main.TableOfTextureAdded[facName][new Random().Next(main.TableOfTextureAdded[facName].Count)];
                                 int tempSurfaceIndex = MTD.FindIndex(x => new string(x.Name).Trim('\0') == texturePicked );
                                 madobj.facData.triangleTextureIndex[i] = tempSurfaceIndex;
                             }
@@ -128,7 +128,7 @@ namespace hogs_gameEditor_wpf
 
                             if (main.TableOfTextureAdded[facName].Exists(x => x == actualTextureName) == false) //check if the actual textureIndex is the right texture
                             {
-                                string texturePicked = main.TableOfTextureAdded[facName][0];
+                                string texturePicked = main.TableOfTextureAdded[facName][new Random().Next(main.TableOfTextureAdded[facName].Count)];
                                 int tempSurfaceIndex = MTD.FindIndex(x => new string(x.Name).Trim('\0') == texturePicked);
                                 madobj.facData.planeTextureIndex[i] = tempSurfaceIndex;
                             }
