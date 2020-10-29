@@ -1,3 +1,5 @@
+## This project is on standby | i have no time to update it
+
 # Hogs_Game_Editor
 a powerfull tool who can modify things on the game : ) 
 
